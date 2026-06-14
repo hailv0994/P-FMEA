@@ -37,6 +37,9 @@ jobs:
           VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - uses: actions/configure-pages@v5
+        with:
+          # Auto-enable GitHub Pages (Actions source) so no manual setup is needed.
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
