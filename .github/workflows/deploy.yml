@@ -3,7 +3,6 @@ name: Deploy P-FMEA to GitHub Pages
 on:
   push:
     branches:
-      - claude/confident-cray-430lou
       - main
   workflow_dispatch:
 
