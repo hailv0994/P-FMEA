@@ -9,6 +9,8 @@ interface LineInputPanelProps {
   onGenerate: () => void;
   onImportFile: (file: File) => void;
   loading: boolean;
+  collapsible?: boolean;
+  onCollapse?: () => void;
 }
 
 const SAMPLE = `1. Load part
@@ -24,6 +26,8 @@ export function LineInputPanel({
   onGenerate,
   onImportFile,
   loading,
+  collapsible,
+  onCollapse,
 }: LineInputPanelProps) {
   const update = (key: keyof ProjectMeta) => (e: ChangeEvent<HTMLInputElement>) =>
     onMetaChange({ ...meta, [key]: e.target.value });
@@ -35,58 +39,65 @@ export function LineInputPanel({
   };
 
   return (
-    <section className="panel input-panel">
-      <h2 className="panel-title">Production Line</h2>
-      <p className="panel-hint">
-        Describe or paste your line / time study. The AI converts each step into
-        a structured PFMEA draft.
-      </p>
+    <section className="panel input-panel-top">
+      <div className="input-panel-head">
+        <div>
+          <h2 className="panel-title">Production Line</h2>
+          <p className="panel-hint">
+            Describe or paste your line / time study. The AI converts each step
+            into a structured PFMEA draft.
+          </p>
+        </div>
+        {collapsible && onCollapse && (
+          <button className="btn-secondary" type="button" onClick={onCollapse}>
+            Collapse ▴
+          </button>
+        )}
+      </div>
 
-      <div className="field-grid">
-        <label className="field">
-          <span>Project name</span>
-          <input
-            value={meta.projectName}
-            onChange={update("projectName")}
-            placeholder="e.g. UFB Glovebox Assembly"
-          />
-        </label>
-        <label className="field">
-          <span>FMEA lead</span>
-          <input
-            value={meta.fmeaLead}
-            onChange={update("fmeaLead")}
-            placeholder="e.g. Tim"
-          />
-        </label>
-        <label className="field field-wide">
-          <span>Scope</span>
-          <input
-            value={meta.scope}
-            onChange={update("scope")}
-            placeholder="Define scope (optional)"
-          />
-        </label>
-        <label className="field field-wide">
-          <span>Team members</span>
-          <input
-            value={meta.teamMembers}
-            onChange={update("teamMembers")}
-            placeholder="James, Jake, Joy, Mike"
+      <div className="input-cols">
+        <div className="field-grid">
+          <label className="field">
+            <span>Project name</span>
+            <input
+              value={meta.projectName}
+              onChange={update("projectName")}
+              placeholder="e.g. UFB Glovebox Assembly"
+            />
+          </label>
+          <label className="field">
+            <span>FMEA lead</span>
+            <input value={meta.fmeaLead} onChange={update("fmeaLead")} placeholder="e.g. Tim" />
+          </label>
+          <label className="field field-wide">
+            <span>Scope</span>
+            <input
+              value={meta.scope}
+              onChange={update("scope")}
+              placeholder="Define scope (optional)"
+            />
+          </label>
+          <label className="field field-wide">
+            <span>Team members</span>
+            <input
+              value={meta.teamMembers}
+              onChange={update("teamMembers")}
+              placeholder="James, Jake, Joy, Mike"
+            />
+          </label>
+        </div>
+
+        <label className="field field-steps">
+          <span>Process steps</span>
+          <textarea
+            className="line-textarea"
+            value={lineText}
+            onChange={(e) => onLineTextChange(e.target.value)}
+            placeholder={SAMPLE}
+            rows={8}
           />
         </label>
       </div>
-
-      <label className="field">
-        <span>Process steps</span>
-        <textarea
-          className="line-textarea"
-          value={lineText}
-          onChange={(e) => onLineTextChange(e.target.value)}
-          placeholder={SAMPLE}
-          rows={8}
-        />
-      </label>
 
       <div className="input-actions">
         <button
@@ -100,12 +111,7 @@ export function LineInputPanel({
 
         <label className="btn-secondary file-btn">
           Import file
-          <input
-            type="file"
-            accept=".txt,.csv,.md"
-            onChange={handleFile}
-            hidden
-          />
+          <input type="file" accept=".txt,.csv,.md" onChange={handleFile} hidden />
         </label>
 
         <button

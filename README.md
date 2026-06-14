@@ -12,13 +12,20 @@ weeks to minutes.
 - **Production Line Input panel** — type, paste, or import a `.txt`/`.csv`/`.md`
   flow. Understands numbered lists, bullets, and `A -> B -> C` arrow flows.
 - **AI generation** — for each step the engine produces 1–3 realistic failure
-  modes with effect, root cause, current control, S/O/D ratings, auto-computed
+  modes with requirement, effect, root cause, split **prevention / detection**
+  controls, special-characteristic classification, S/O/D ratings, auto-computed
   **RPN**, and a practical recommended action.
-- **Fully editable PFMEA table** — every cell is inline-editable; S/O/D edits
-  recompute RPN live, with low/medium/high risk color bands.
-- **Iterative workflow** — add a failure mode to any step, add blank rows,
-  assign a responsible person, and set status (Open / In Progress / Completed).
-- **Export** the finished table to CSV.
+- **4-step AIAG-VDA wizard** (like Kaizen Copilot): Structural & Functional
+  Analysis → Failure Analysis → Risk Analysis → Risk Management & Communication.
+- **Failure Analysis card view** with an **✨ AI Suggest** button that proposes
+  additional failure modes per step.
+- **Fully editable everywhere** — every cell is inline-editable; S/O/D edits
+  recompute RPN live, with low/medium/high risk color bands. A full PFMEA sheet
+  (all columns) is available under any step.
+- **Action tracking** — responsible, target date, action taken, and post-action
+  S/O/D/RPN to show risk reduction; status (Open / In Progress / Completed).
+- **Results page** — risk summary, AIAG-VDA Action Priority (H/M/L), RPN
+  reduction %, and a priority-ranked list. Export everything to CSV.
 
 ## AI engine
 
@@ -75,22 +82,27 @@ npm run preview  # preview the production build
 ```
 src/
   components/
-    Header.tsx          # top bar + engine status pill
-    LineInputPanel.tsx  # line description / project metadata input
-    PfmeaTable.tsx      # editable PFMEA table
+    Header.tsx              # top bar + engine pill + Results button
+    LineInputPanel.tsx      # line description / project metadata input
+    Stepper.tsx             # 4-step AIAG-VDA workflow header
+    FailureAnalysisCards.tsx# step-2 card view + AI Suggest
+    PfmeaTable.tsx          # column-driven editable table (reused per step)
+    ResultsView.tsx         # risk summary + action priority
   lib/
-    parseSteps.ts       # parse free-form line text into steps
-    gemini.ts           # Gemini API call + structured-output schema
-    fallbackGenerator.ts# offline manufacturing knowledge base
-    generate.ts         # orchestrator (Gemini -> fallback)
-    rpn.ts              # RPN math + row helpers
-    csv.ts              # CSV export
-  types.ts              # shared types
-  App.tsx               # state + wiring
+    parseSteps.ts           # parse free-form line text into steps
+    gemini.ts               # Gemini API call + AI Suggest + schema
+    fallbackGenerator.ts    # offline manufacturing knowledge base
+    generate.ts             # orchestrator (Gemini -> fallback)
+    rpn.ts                  # RPN + Action Priority math + row helpers
+    columns.ts              # column registry + per-step column sets
+    csv.ts                  # CSV export
+  types.ts                  # shared types
+  App.tsx                   # wizard state + wiring
 ```
 
 ## PFMEA columns
 
-Process Step · Function · Failure Mode · Effect · Cause · Current Control ·
-Severity (S) · Occurrence (O) · Detection (D) · RPN · Recommended Action ·
-Responsible · Status
+Process Step · Function · Requirement · Failure Mode · Effect · Cause ·
+Severity (S) · Classification · Occurrence (O) · Control–Prevention ·
+Control–Detection · Detection (D) · RPN · Recommended Action · Responsible ·
+Target Date · Action Taken · S′ · O′ · D′ · RPN′ (after action) · Status
