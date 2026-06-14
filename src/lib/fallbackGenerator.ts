@@ -331,6 +331,298 @@ const A: Archetype[] = [
   },
 ];
 
+/**
+ * Kho kiến thức riêng cho sản phẩm PRO2 — Astemo Hà Nội (giảm xóc xe máy):
+ * Fork Pipe, Rod, Damper Case Comp. Được khớp TRƯỚC các khuôn mẫu chung để AI
+ * gợi ý bám sát sản phẩm thực tế. Nội dung dựa trên PFMEA hàn Damper thực tế.
+ */
+const COMPANY: Archetype[] = [
+  {
+    // Hàn cụm Damper Case (spot/project/condenser/seam/MAG) — ưu tiên trước "hàn" chung
+    keywords: /damper|case|\bcap\b|spot|project|condenser|seam|\bmag\b/i,
+    fn: "Hàn cụm Damper Case (spot/project/condenser/seam/MAG) — liên kết & kín dầu",
+    requirement: "Độ bền mối hàn, độ kín dầu, kích thước & độ vuông góc đạt bản vẽ",
+    modes: [
+      {
+        failureMode: "Độ bền mối hàn không đạt (mối hàn bung → tuột cụm giảm xóc)",
+        effect: "Tuột cụm giảm xóc → mất chức năng chính, rủi ro an toàn",
+        cause: "Biến động quá trình hàn; cài sai điện áp/gia áp; điện cực mòn",
+        classification: "S",
+        controlPrevention: "Thiết lập điểm kiểm soát bắt buộc; weld checker giám sát dòng hàn",
+        controlDetection: "Kiểm tra độ bền bằng máy chuyên dụng theo tần suất; thử phá hủy",
+        severity: 9,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Giám sát hàn bằng weld checker + lịch thay/sửa điện cực",
+      },
+      {
+        failureMode: "Mối hàn không hàn kín (chảy dầu)",
+        effect: "Rò / chảy dầu → mất chức năng giảm chấn",
+        cause: "Biến động quá trình hàn; khe hở lắp ghép không đạt",
+        classification: "S",
+        controlPrevention: "Điểm kiểm soát bắt buộc; đồ gá kiểm soát khe lắp ghép",
+        controlDetection: "Kiểm tra kín (dò khí/dầu) hoặc bằng mắt theo tần suất",
+        severity: 8,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Thêm kiểm tra kín (dò khí) sau hàn",
+      },
+      {
+        failureMode: "Kích thước chiều cao tổng / lệch 2 bên giảm xóc không đạt",
+        effect: "Giảm xóc bị lệch → suy giảm chức năng",
+        cause: "Cài đặt điện áp/độ nhún sai; độ nhô mainpipe chưa đúng",
+        classification: "",
+        controlPrevention: "Quy định cài đặt theo control plan; đào tạo nhân viên cài đặt",
+        controlDetection: "Đo kích thước/độ lệch theo tần suất; weld checker",
+        severity: 5,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Chuẩn hóa cài đặt & kiểm tra kích thước đầu chuyền",
+      },
+      {
+        failureMode: "Độ vuông góc / đường kính vùng trượt không đạt",
+        effect: "Giảm xóc nghiêng hoặc bị kẹt → suy giảm/mất chức năng",
+        cause: "Điện cực, đồ gá hàn va đập, nứt vỡ; xylanh điện cực dưới bị kẹt",
+        classification: "",
+        controlPrevention: "Bảo quản & kiểm tra điện cực/đồ gá; bảo trì xylanh định kỳ",
+        controlDetection: "Kiểm tra điện cực/đồ gá bằng mắt trước SX; đo độ vuông góc",
+        severity: 6,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Lịch kiểm tra điện cực/đồ gá & bảo trì xylanh điện cực",
+      },
+      {
+        failureMode: "Mặt ngoài: xước, xỉ hàn, bavia, va đập",
+        effect: "Lỗi ngoại quan; có thể gây tiếng kêu",
+        cause: "Xỉ hàn bắn vào sản phẩm",
+        classification: "",
+        controlPrevention: "Lắp hệ thống xì khí; che chắn vùng hàn",
+        controlDetection: "Kiểm tra bề mặt mối hàn bằng mắt theo tần suất",
+        severity: 4,
+        occurrence: 2,
+        detection: 4,
+        recommendedAction: "Lắp xì khí tự động; chuẩn hóa kiểm tra ngoại quan",
+      },
+    ],
+  },
+  {
+    // Khoan lỗ thoát dầu (Fork Pipe) — ưu tiên trước "khoan/gia công" chung
+    keywords: /lỗ thoát dầu|khoan lỗ|oil.?hole/i,
+    fn: "Khoan lỗ thoát dầu trên Fork Pipe đúng vị trí & kích thước",
+    requirement: "Đường kính & vị trí lỗ thoát dầu đạt bản vẽ, không bavia trong lỗ",
+    modes: [
+      {
+        failureMode: "Sai vị trí / thiếu lỗ thoát dầu",
+        effect: "Dầu không thoát đúng → đặc tính giảm chấn sai, lỗi chức năng",
+        cause: "Gá đặt sai; bỏ sót lỗ trong cụm nhiều lỗ",
+        classification: "S",
+        controlPrevention: "Đồ gá định vị chống nhầm; trình tự khoan cố định",
+        controlDetection: "Kiểm tra vị trí/đủ lỗ bằng đồ gá kiểm hoặc đếm lỗ",
+        severity: 8,
+        occurrence: 2,
+        detection: 4,
+        recommendedAction: "Chống nhầm vị trí bằng đồ gá + cảm biến đếm lỗ",
+      },
+      {
+        failureMode: "Đường kính lỗ sai / bavia trong lỗ",
+        effect: "Lưu lượng dầu sai → đặc tính giảm chấn lệch; bavia gây kẹt",
+        cause: "Mũi khoan mòn; thiếu bước gỡ bavia",
+        classification: "",
+        controlPrevention: "Quản lý tuổi thọ mũi khoan; bước gỡ bavia",
+        controlDetection: "Kiểm tra đường kính bằng calip thông/chặn",
+        severity: 7,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Giám sát tuổi thọ mũi khoan; thêm gỡ bavia & kiểm bavia",
+      },
+    ],
+  },
+  {
+    // Mạ Ni-Cr cứng / Cr trang trí (Fork Pipe, Rod)
+    keywords: /mạ|ni.?cr|chrom|chrome|plating/i,
+    fn: "Mạ Ni-Cr cứng / Cr trang trí lên bề mặt trượt",
+    requirement: "Chiều dày lớp mạ & độ bám dính đạt yêu cầu, bề mặt không lỗi",
+    modes: [
+      {
+        failureMode: "Chiều dày lớp mạ không đạt",
+        effect: "Mòn nhanh / gỉ sét → rò dầu, giảm tuổi thọ giảm xóc",
+        cause: "Mật độ dòng/thời gian mạ sai; nồng độ bể mạ lệch",
+        classification: "",
+        controlPrevention: "Kiểm soát thông số bể mạ & dòng điện theo control plan",
+        controlDetection: "Đo chiều dày lớp mạ theo tần suất",
+        severity: 7,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Định kỳ phân tích bể mạ; đo chiều dày tự động",
+      },
+      {
+        failureMode: "Bong tróc / kém bám dính lớp mạ",
+        effect: "Lớp mạ bong → xước phớt, rò dầu",
+        cause: "Tiền xử lý/tẩy dầu kém; bề mặt nền bẩn",
+        classification: "S",
+        controlPrevention: "Quy trình tiền xử lý/tẩy rửa được kiểm soát",
+        controlDetection: "Thử bám dính (bẻ/uốn) định kỳ",
+        severity: 8,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Kiểm soát tiền xử lý; thêm thử bám dính định kỳ",
+      },
+      {
+        failureMode: "Lỗi bề mặt mạ (rỗ, cháy, vết)",
+        effect: "Lỗi ngoại quan; điểm tập trung ăn mòn",
+        cause: "Bể bẩn; dòng phân bố không đều; treo hàng sai",
+        classification: "",
+        controlPrevention: "Lọc bể mạ; bố trí treo hàng & anode hợp lý",
+        controlDetection: "Kiểm tra ngoại quan 100% hoặc theo mẫu",
+        severity: 5,
+        occurrence: 4,
+        detection: 4,
+        recommendedAction: "Bảo trì bể mạ & cải thiện cách treo hàng",
+      },
+    ],
+  },
+  {
+    // Cán ren (Rod)
+    keywords: /cán ren|lăn ren|thread.?roll|\bren\b/i,
+    fn: "Cán ren trên Rod đạt biên dạng & dung sai ren",
+    requirement: "Biên dạng, đường kính & bước ren đạt bản vẽ",
+    modes: [
+      {
+        failureMode: "Ren không đạt dung sai (calip ren không qua/chặn)",
+        effect: "Lắp ghép ren lỏng/chặt → mối ghép yếu, rủi ro tuột",
+        cause: "Bánh cán mòn; điều chỉnh sai; phôi sai kích thước trước cán",
+        classification: "S",
+        controlPrevention: "Quản lý tuổi thọ bánh cán; chuẩn phôi trước cán",
+        controlDetection: "Kiểm tra bằng calip ren qua/chặn theo tần suất",
+        severity: 8,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Giám sát tuổi thọ bánh cán; kiểm calip ren định kỳ",
+      },
+      {
+        failureMode: "Tróc / nứt chân ren",
+        effect: "Giảm độ bền mỏi → gãy ren khi chịu tải",
+        cause: "Lực cán quá lớn; vật liệu/độ cứng phôi lệch",
+        classification: "S",
+        controlPrevention: "Kiểm soát lực cán & độ cứng phôi đầu vào",
+        controlDetection: "Kiểm tra ngoại quan chân ren; thử mỏi định kỳ",
+        severity: 8,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Kiểm soát lực cán; kiểm tra độ cứng phôi đầu vào",
+      },
+    ],
+  },
+  {
+    // Tiện (Fork Pipe, Rod)
+    keywords: /tiện|turning|lathe/i,
+    fn: "Tiện chi tiết (Fork Pipe / Rod) đạt kích thước & độ đồng tâm",
+    requirement: "Đường kính ngoài, độ đồng tâm/độ đảo & độ nhám đạt bản vẽ",
+    modes: [
+      {
+        failureMode: "Đường kính ngoài ngoài dung sai",
+        effect: "Không lắp khít với phớt/bạc → rò dầu, suy giảm chức năng giảm xóc",
+        cause: "Dao tiện mòn; sai offset; trôi nhiệt",
+        classification: "",
+        controlPrevention: "Quản lý tuổi thọ dao; bù offset tự động",
+        controlDetection: "Đo đường kính bằng panme/calip theo tần suất",
+        severity: 7,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Lắp đo trong quá trình, tự bù offset dao",
+      },
+      {
+        failureMode: "Độ đồng tâm / độ đảo không đạt",
+        effect: "Rung, mòn phớt sớm, giảm xóc phát ra tiếng kêu",
+        cause: "Gá kẹp không đồng tâm; mũi chống tâm mòn",
+        classification: "",
+        controlPrevention: "Kiểm tra/bảo dưỡng chấu kẹp & mũi chống tâm",
+        controlDetection: "Đo độ đảo bằng đồng hồ so",
+        severity: 6,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Định kỳ rà chấu kẹp; thêm kiểm tra độ đảo đầu chuyền",
+      },
+      {
+        failureMode: "Độ nhám bề mặt trượt không đạt",
+        effect: "Bề mặt trượt kém → mòn phớt, rò dầu",
+        cause: "Dao mòn; thông số cắt sai; rung",
+        classification: "",
+        controlPrevention: "Quy định thông số cắt & chu kỳ thay dao",
+        controlDetection: "Đo độ nhám Ra theo tần suất",
+        severity: 6,
+        occurrence: 4,
+        detection: 5,
+        recommendedAction: "Tối ưu thông số cắt; giám sát tuổi thọ dao",
+      },
+    ],
+  },
+  {
+    // Mài (Fork Pipe)
+    keywords: /mài|grind/i,
+    fn: "Mài bề mặt trượt đạt kích thước & độ nhám",
+    requirement: "Đường kính sau mài & độ nhám Ra đạt bản vẽ, không cháy bề mặt",
+    modes: [
+      {
+        failureMode: "Đường kính sau mài ngoài dung sai",
+        effect: "Lắp không khít với phớt → rò dầu",
+        cause: "Đá mài mòn; bù sai; nhiệt",
+        classification: "",
+        controlPrevention: "Sửa đá định kỳ; bù kích thước",
+        controlDetection: "Đo đường kính tự động/panme",
+        severity: 7,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Đo trong quá trình có bù tự động",
+      },
+      {
+        failureMode: "Cháy bề mặt do mài (grinding burn)",
+        effect: "Giảm độ bền mỏi → nứt trục khi sử dụng",
+        cause: "Lượng ăn dao lớn; thiếu dung dịch làm mát",
+        classification: "S",
+        controlPrevention: "Quy định lượng ăn dao & lưu lượng làm mát",
+        controlDetection: "Kiểm tra cháy mài (nital etch) định kỳ",
+        severity: 8,
+        occurrence: 2,
+        detection: 5,
+        recommendedAction: "Kiểm soát thông số mài; giám sát lưu lượng làm mát",
+      },
+    ],
+  },
+  {
+    // Đánh bóng (Fork Pipe, Rod)
+    keywords: /đánh bóng|polish|buff/i,
+    fn: "Đánh bóng bề mặt trượt đạt độ nhám & ngoại quan",
+    requirement: "Độ nhám & ngoại quan bề mặt đạt yêu cầu",
+    modes: [
+      {
+        failureMode: "Độ nhám / độ bóng không đạt",
+        effect: "Bề mặt trượt kém → mòn phớt, rò dầu",
+        cause: "Bánh bóng mòn; lực/thời gian không đủ",
+        classification: "",
+        controlPrevention: "Quy định thay bánh bóng & thông số đánh bóng",
+        controlDetection: "Đo độ nhám/kiểm ngoại quan theo mẫu",
+        severity: 6,
+        occurrence: 3,
+        detection: 4,
+        recommendedAction: "Chuẩn hóa thông số đánh bóng; giám sát bánh bóng",
+      },
+      {
+        failureMode: "Xước / lõm sau đánh bóng",
+        effect: "Lỗi ngoại quan; xước phớt khi vận hành → rò dầu",
+        cause: "Lẫn hạt mài; va đập khi thao tác/vận chuyển",
+        classification: "",
+        controlPrevention: "Vệ sinh hạt mài; bảo vệ chi tiết khi vận chuyển",
+        controlDetection: "Kiểm tra ngoại quan",
+        severity: 5,
+        occurrence: 4,
+        detection: 4,
+        recommendedAction: "Kiểm soát sạch khu vực; cải thiện cách đựng/thao tác hàng",
+      },
+    ],
+  },
+];
+
 const GENERIC_FN = (step: string) =>
   `Thực hiện "${step.replace(/[.;]+$/, "")}" đạt yêu cầu kỹ thuật`;
 
@@ -364,7 +656,8 @@ const GENERIC_MODES: Mode[] = [
 ];
 
 function matchArchetype(step: string): Archetype | undefined {
-  return A.find((a) => a.keywords.test(step));
+  // Company/product-specific knowledge (PRO2 — Astemo) takes priority.
+  return COMPANY.find((a) => a.keywords.test(step)) || A.find((a) => a.keywords.test(step));
 }
 
 function modeToRow(step: string, fn: string, requirement: string, m: Mode): GeneratedRow {

@@ -1,5 +1,6 @@
 import type { ChangeEvent } from "react";
 import type { ProjectMeta } from "../types";
+import { PRODUCT_PRESETS, type ProductPreset } from "../lib/presets";
 
 interface LineInputPanelProps {
   meta: ProjectMeta;
@@ -8,6 +9,7 @@ interface LineInputPanelProps {
   onLineTextChange: (text: string) => void;
   onGenerate: () => void;
   onImportFile: (file: File) => void;
+  onLoadPreset: (preset: ProductPreset) => void;
   loading: boolean;
   collapsible?: boolean;
   onCollapse?: () => void;
@@ -25,6 +27,7 @@ export function LineInputPanel({
   onLineTextChange,
   onGenerate,
   onImportFile,
+  onLoadPreset,
   loading,
   collapsible,
   onCollapse,
@@ -89,6 +92,20 @@ export function LineInputPanel({
 
         <label className="field field-steps">
           <span>Các bước công đoạn</span>
+          <div className="preset-row">
+            <span className="preset-label">Sản phẩm PRO2:</span>
+            {PRODUCT_PRESETS.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                className="preset-chip"
+                onClick={() => onLoadPreset(p)}
+                disabled={loading}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
           <textarea
             className="line-textarea"
             value={lineText}

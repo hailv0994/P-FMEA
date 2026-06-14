@@ -83,6 +83,11 @@ export default function App() {
     }
   };
 
+  const handleLoadPreset = (preset: { projectName: string; steps: string }) => {
+    setLineText(preset.steps);
+    setMeta((m) => ({ ...m, projectName: m.projectName || preset.projectName }));
+  };
+
   const handleImportFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = () => setLineText(String(reader.result ?? ""));
@@ -216,6 +221,7 @@ export default function App() {
             onLineTextChange={setLineText}
             onGenerate={handleGenerate}
             onImportFile={handleImportFile}
+            onLoadPreset={handleLoadPreset}
             loading={loading}
             collapsible={hasRows}
             onCollapse={() => setInputOpen(false)}

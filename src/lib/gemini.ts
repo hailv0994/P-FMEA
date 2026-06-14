@@ -1,4 +1,5 @@
 import type { GeneratedRow, ProjectMeta } from "../types";
+import { COMPANY_CONTEXT } from "./presets";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
 const MODEL =
@@ -27,7 +28,9 @@ Rules:
 - Be specific to the described line; avoid generic answers. Preserve the given step order.
 - IMPORTANT: Write ALL text fields (function, requirement, failureMode, effect, cause,
   controlPrevention, controlDetection, recommendedAction) in VIETNAMESE. Keep the
-  classification symbols (S/CC/SC) and the numeric ratings as-is.`;
+  classification symbols (S/CC/SC) and the numeric ratings as-is.
+
+${COMPANY_CONTEXT}`;
 
 const RESPONSE_SCHEMA = {
   type: "object",
