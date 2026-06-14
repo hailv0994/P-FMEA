@@ -13,12 +13,12 @@ export function Header({ usingGemini, projectName, onResults, showingResults }: 
           ▤
         </span>
         <span className="brand-name">P-FMEA</span>
-        <span className="brand-sub">AI Quality Planning</span>
+        <span className="brand-sub">Lập kế hoạch chất lượng bằng AI</span>
         {projectName && <span className="brand-project">/ {projectName}</span>}
       </div>
       <div className="header-right">
         <span className={`engine-pill ${usingGemini ? "on" : "off"}`}>
-          {usingGemini ? "Gemini AI connected" : "Offline engine"}
+          {usingGemini ? "Đã kết nối Gemini AI" : "Chế độ ngoại tuyến"}
         </span>
         {onResults && (
           <button
@@ -26,7 +26,7 @@ export function Header({ usingGemini, projectName, onResults, showingResults }: 
             type="button"
             onClick={onResults}
           >
-            Results
+            Kết quả
           </button>
         )}
       </div>

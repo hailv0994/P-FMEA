@@ -25,7 +25,12 @@ weeks to minutes.
 - **Action tracking** — responsible, target date, action taken, and post-action
   S/O/D/RPN to show risk reduction; status (Open / In Progress / Completed).
 - **Results page** — risk summary, AIAG-VDA Action Priority (H/M/L), RPN
-  reduction %, and a priority-ranked list. Export everything to CSV.
+  reduction %, and a priority-ranked list.
+- **Vietnamese UI** (Arial font) and Vietnamese AI-generated content.
+- **Excel export to the exact print template** (`FORMAT_PFMEA.xlsx`): preserves
+  the template's column widths, fonts, colours, borders and A4 landscape print
+  setup; one worksheet = one A4 page; column A merges per process step; only row
+  heights are adjusted to fit content. Also exports to CSV.
 
 ## AI engine
 

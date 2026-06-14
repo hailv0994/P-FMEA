@@ -4,10 +4,16 @@ export type PfmeaStatus = "Open" | "In Progress" | "Completed";
 export type WizardStep = 1 | 2 | 3 | 4;
 
 export const STEP_LABELS: Record<WizardStep, string> = {
-  1: "Structural & Functional Analysis",
-  2: "Failure Analysis",
-  3: "Risk Analysis",
-  4: "Risk Management & Communication",
+  1: "Phân tích cấu trúc & chức năng",
+  2: "Phân tích hỏng hóc",
+  3: "Phân tích rủi ro",
+  4: "Quản lý rủi ro & truyền đạt",
+};
+
+export const STATUS_LABELS: Record<PfmeaStatus, string> = {
+  Open: "Mở",
+  "In Progress": "Đang xử lý",
+  Completed: "Hoàn thành",
 };
 
 export interface PfmeaRow {

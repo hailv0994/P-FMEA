@@ -1,4 +1,5 @@
 import type { PfmeaRow, PfmeaStatus } from "../types";
+import { STATUS_LABELS } from "../types";
 import { rpnBand } from "../lib/rpn";
 import { COLUMNS, type ColumnKey } from "../lib/columns";
 
@@ -161,7 +162,7 @@ function Cell({ row, colKey, onUpdateRow }: CellProps) {
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
-                {s}
+                {STATUS_LABELS[s]}
               </option>
             ))}
           </select>

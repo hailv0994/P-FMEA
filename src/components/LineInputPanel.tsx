@@ -13,10 +13,10 @@ interface LineInputPanelProps {
   onCollapse?: () => void;
 }
 
-const SAMPLE = `1. Load part
-2. Install component
-3. Tighten screw
-4. Inspect`;
+const SAMPLE = `1. Đưa chi tiết vào đồ gá
+2. Lắp linh kiện
+3. Siết vít
+4. Kiểm tra`;
 
 export function LineInputPanel({
   meta,
@@ -42,15 +42,15 @@ export function LineInputPanel({
     <section className="panel input-panel-top">
       <div className="input-panel-head">
         <div>
-          <h2 className="panel-title">Production Line</h2>
+          <h2 className="panel-title">Dây chuyền sản xuất</h2>
           <p className="panel-hint">
-            Describe or paste your line / time study. The AI converts each step
-            into a structured PFMEA draft.
+            Mô tả hoặc dán dây chuyền / bảng phân tích thời gian. AI sẽ chuyển mỗi
+            bước thành một bản nháp PFMEA có cấu trúc.
           </p>
         </div>
         {collapsible && onCollapse && (
           <button className="btn-secondary" type="button" onClick={onCollapse}>
-            Collapse ▴
+            Thu gọn ▴
           </button>
         )}
       </div>
@@ -58,37 +58,37 @@ export function LineInputPanel({
       <div className="input-cols">
         <div className="field-grid">
           <label className="field">
-            <span>Project name</span>
+            <span>Tên dự án</span>
             <input
               value={meta.projectName}
               onChange={update("projectName")}
-              placeholder="e.g. UFB Glovebox Assembly"
+              placeholder="VD: Lắp ráp hộp đựng găng UFB"
             />
           </label>
           <label className="field">
-            <span>FMEA lead</span>
-            <input value={meta.fmeaLead} onChange={update("fmeaLead")} placeholder="e.g. Tim" />
+            <span>Trưởng nhóm FMEA</span>
+            <input value={meta.fmeaLead} onChange={update("fmeaLead")} placeholder="VD: Tâm" />
           </label>
           <label className="field field-wide">
-            <span>Scope</span>
+            <span>Phạm vi</span>
             <input
               value={meta.scope}
               onChange={update("scope")}
-              placeholder="Define scope (optional)"
+              placeholder="Xác định phạm vi (tùy chọn)"
             />
           </label>
           <label className="field field-wide">
-            <span>Team members</span>
+            <span>Thành viên nhóm</span>
             <input
               value={meta.teamMembers}
               onChange={update("teamMembers")}
-              placeholder="James, Jake, Joy, Mike"
+              placeholder="An, Bình, Chi, Dũng"
             />
           </label>
         </div>
 
         <label className="field field-steps">
-          <span>Process steps</span>
+          <span>Các bước công đoạn</span>
           <textarea
             className="line-textarea"
             value={lineText}
@@ -106,11 +106,11 @@ export function LineInputPanel({
           onClick={() => onLineTextChange(SAMPLE)}
           disabled={loading}
         >
-          Load sample
+          Tải mẫu
         </button>
 
         <label className="btn-secondary file-btn">
-          Import file
+          Nhập tệp
           <input type="file" accept=".txt,.csv,.md" onChange={handleFile} hidden />
         </label>
 
@@ -120,7 +120,7 @@ export function LineInputPanel({
           onClick={onGenerate}
           disabled={loading || !lineText.trim()}
         >
-          {loading ? "Generating…" : "⚡ Generate PFMEA"}
+          {loading ? "Đang tạo…" : "⚡ Tạo PFMEA"}
         </button>
       </div>
     </section>

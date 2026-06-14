@@ -28,8 +28,8 @@ export function FailureAnalysisCards({
   if (groups.length === 0) {
     return (
       <div className="empty-state">
-        <p>No process steps yet.</p>
-        <p className="muted">Generate a PFMEA first, or add steps in step 1.</p>
+        <p>Chưa có công đoạn nào.</p>
+        <p className="muted">Hãy tạo PFMEA trước, hoặc thêm công đoạn ở bước 1.</p>
       </div>
     );
   }
@@ -50,9 +50,9 @@ export function FailureAnalysisCards({
                 type="button"
                 onClick={() => onAiSuggest(group)}
                 disabled={loading}
-                title="Use AI to suggest more failure modes for this step"
+                title="Dùng AI gợi ý thêm dạng hỏng hóc cho công đoạn này"
               >
-                {loading ? "Suggesting…" : "✨ AI Suggest"}
+                {loading ? "Đang gợi ý…" : "✨ AI gợi ý"}
               </button>
             </div>
 
@@ -69,17 +69,17 @@ export function FailureAnalysisCards({
                   </button>
 
                   <label className="fa-field">
-                    <span className="req">Failure Mode</span>
+                    <span className="req">Dạng hỏng hóc</span>
                     <textarea
                       rows={2}
                       value={row.failureMode}
-                      placeholder="e.g. Insufficient weld strength"
+                      placeholder="VD: Mối hàn không đạt độ bền"
                       onChange={(e) => onUpdateRow(row.id, { failureMode: e.target.value })}
                     />
                   </label>
 
                   <label className="fa-field">
-                    <span>Classification</span>
+                    <span>Phân loại</span>
                     <input
                       value={row.classification}
                       placeholder="– / S / CC / SC"
@@ -91,27 +91,27 @@ export function FailureAnalysisCards({
                   </label>
 
                   <label className="fa-field">
-                    <span>Effect</span>
+                    <span>Ảnh hưởng</span>
                     <textarea
                       rows={2}
                       value={row.effect}
-                      placeholder="Effect on customer / process"
+                      placeholder="Ảnh hưởng tới khách hàng / quá trình"
                       onChange={(e) => onUpdateRow(row.id, { effect: e.target.value })}
                     />
                   </label>
 
                   <label className="fa-field">
-                    <span>Cause</span>
+                    <span>Nguyên nhân</span>
                     <textarea
                       rows={2}
                       value={row.cause}
-                      placeholder="Root cause on the shop floor"
+                      placeholder="Nguyên nhân gốc tại hiện trường"
                       onChange={(e) => onUpdateRow(row.id, { cause: e.target.value })}
                     />
                   </label>
 
                   <label className="fa-field fa-sev">
-                    <span className="req">Severity</span>
+                    <span className="req">Mức nghiêm trọng</span>
                     <input
                       type="number"
                       min={1}
@@ -130,10 +130,10 @@ export function FailureAnalysisCards({
                 className="fa-add"
                 type="button"
                 onClick={() => onAddFailureMode(group)}
-                title="Add a failure mode manually"
+                title="Thêm dạng hỏng hóc thủ công"
               >
                 <span>＋</span>
-                Add failure mode
+                Thêm dạng hỏng hóc
               </button>
             </div>
           </section>

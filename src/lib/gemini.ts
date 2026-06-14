@@ -24,7 +24,10 @@ Rules:
   "CC" (critical), "SC" (significant) — otherwise an empty string.
 - Rate Severity (S), Occurrence (O), Detection (D) each 1-10 on the AIAG/VDA scale
   (10 = worst: most severe / most frequent / hardest to detect).
-- Be specific to the described line; avoid generic answers. Preserve the given step order.`;
+- Be specific to the described line; avoid generic answers. Preserve the given step order.
+- IMPORTANT: Write ALL text fields (function, requirement, failureMode, effect, cause,
+  controlPrevention, controlDetection, recommendedAction) in VIETNAMESE. Keep the
+  classification symbols (S/CC/SC) and the numeric ratings as-is.`;
 
 const RESPONSE_SCHEMA = {
   type: "object",

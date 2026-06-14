@@ -20,7 +20,7 @@ export async function generatePfmea(
 ): Promise<GenerateResult> {
   const steps = parseSteps(lineText);
   if (steps.length === 0) {
-    return { rows: [], source: "offline", note: "No process steps detected." };
+    return { rows: [], source: "offline", note: "Không phát hiện công đoạn nào." };
   }
 
   if (hasGeminiKey()) {
@@ -32,7 +32,7 @@ export async function generatePfmea(
       return {
         rows: generateFallback(steps).map(toPfmeaRow),
         source: "offline",
-        note: `Gemini call failed (${message}). Showing an offline draft instead.`,
+        note: `Gọi Gemini thất bại (${message}). Đã dùng bản nháp ngoại tuyến.`,
       };
     }
   }
@@ -40,7 +40,7 @@ export async function generatePfmea(
   return {
     rows: generateFallback(steps).map(toPfmeaRow),
     source: "offline",
-    note: "No Gemini API key set — generated with the built-in offline engine.",
+    note: "Chưa cấu hình Gemini API key — đã tạo bằng bộ máy ngoại tuyến.",
   };
 }
 
@@ -62,7 +62,7 @@ export async function suggestForStep(args: {
       return {
         rows: suggestFailureModesFallback(args).map(toPfmeaRow),
         source: "offline",
-        note: `Gemini suggest failed (${message}); used offline suggestions.`,
+        note: `Gemini gợi ý thất bại (${message}); đã dùng gợi ý ngoại tuyến.`,
       };
     }
   }

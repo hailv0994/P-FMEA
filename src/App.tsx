@@ -11,6 +11,7 @@ import { generatePfmea, suggestForStep } from "./lib/generate";
 import { hasGeminiKey } from "./lib/gemini";
 import { makeId } from "./lib/rpn";
 import { downloadCsv } from "./lib/csv";
+import { exportToTemplate } from "./lib/excelExport";
 import { ALL_COLUMNS, STEP_COLUMNS } from "./lib/columns";
 
 const EMPTY_META: ProjectMeta = {
@@ -190,8 +191,9 @@ export default function App() {
     if (activeStep > 1) setActiveStep((s) => (s - 1) as WizardStep);
   };
 
-  const handleExport = () =>
-    downloadCsv(rows, `${meta.projectName || "pfmea"}.csv`.replace(/\s+/g, "_"));
+  const baseName = (meta.projectName || "pfmea").replace(/\s+/g, "_");
+  const handleExportCsv = () => downloadCsv(rows, `${baseName}.csv`);
+  const handleExportExcel = () => exportToTemplate(rows, `${baseName}.xlsx`);
 
   const hasRows = rows.length > 0;
 
@@ -221,11 +223,11 @@ export default function App() {
         ) : (
           <div className="input-collapsed">
             <span>
-              <strong>{meta.projectName || "Untitled PFMEA"}</strong> · {rows.length}{" "}
-              failure modes · {groups.length} steps
+              <strong>{meta.projectName || "PFMEA chưa đặt tên"}</strong> · {rows.length}{" "}
+              dạng hỏng hóc · {groups.length} công đoạn
             </span>
             <button className="btn-secondary" type="button" onClick={() => setInputOpen(true)}>
-              Edit input / Regenerate
+              Sửa đầu vào / Tạo lại
             </button>
           </div>
         )}
@@ -233,12 +235,17 @@ export default function App() {
         {note && <div className="notice">{note}</div>}
         {loading && (
           <div className="notice loading">
-            Generating PFMEA draft from your process steps…
+            Đang tạo bản nháp PFMEA từ các bước công đoạn của bạn…
           </div>
         )}
 
         {view === "results" ? (
-          <ResultsView rows={rows} onExport={handleExport} onBack={() => setView("editor")} />
+          <ResultsView
+            rows={rows}
+            onExportExcel={handleExportExcel}
+            onExportCsv={handleExportCsv}
+            onBack={() => setView("editor")}
+          />
         ) : (
           hasRows && (
             <div className="wizard">
@@ -252,7 +259,7 @@ export default function App() {
                   <div className="wizard-actions">
                     {activeStep === 1 && (
                       <button className="btn-secondary" type="button" onClick={addStep}>
-                        + Add step
+                        + Thêm công đoạn
                       </button>
                     )}
                     <button
@@ -261,10 +268,10 @@ export default function App() {
                       onClick={prev}
                       disabled={activeStep === 1}
                     >
-                      Previous
+                      Quay lại
                     </button>
                     <button className="btn-primary" type="button" onClick={next}>
-                      {activeStep === 4 ? "View Results" : "Next"}
+                      {activeStep === 4 ? "Xem kết quả" : "Tiếp theo"}
                     </button>
                   </div>
                 </div>
@@ -296,7 +303,7 @@ export default function App() {
                   type="button"
                   onClick={() => setShowFullTable((v) => !v)}
                 >
-                  {showFullTable ? "▾" : "▸"} Full PFMEA sheet ({ALL_COLUMNS.length} columns)
+                  {showFullTable ? "▾" : "▸"} Bảng PFMEA đầy đủ ({ALL_COLUMNS.length} cột)
                 </button>
                 {showFullTable && (
                   <PfmeaTable
@@ -316,8 +323,8 @@ export default function App() {
         {!hasRows && !loading && inputOpen && (
           <div className="empty-state hint-card">
             <p className="muted">
-              Describe your production line above and hit{" "}
-              <strong>Generate PFMEA</strong> to start the 4-step analysis.
+              Mô tả dây chuyền sản xuất ở trên và bấm <strong>Tạo PFMEA</strong>{" "}
+              để bắt đầu quy trình phân tích 4 bước.
             </p>
           </div>
         )}

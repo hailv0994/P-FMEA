@@ -16,8 +16,16 @@
   --g3: #0891b2;
   --g4: #0f766e;
   --radius: 12px;
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
   color: var(--ink);
+}
+
+body,
+input,
+textarea,
+select,
+button {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
 * {
@@ -697,6 +705,10 @@ button:disabled,
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+.results-export {
+  display: flex;
+  gap: 8px;
 }
 .stat-grid {
   display: grid;
