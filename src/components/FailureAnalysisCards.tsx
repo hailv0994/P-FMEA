@@ -72,7 +72,7 @@ export function FailureAnalysisCards({
         Mỗi <strong>hạng mục yêu cầu</strong> (đặt ở bước 1) ứng với một{" "}
         <strong>dạng hỏng hóc</strong> — là phủ định của yêu cầu. Sau khi mô tả{" "}
         <strong>Ảnh hưởng</strong>, ghép thêm một câu tiêu chuẩn để chấm{" "}
-        <strong>Mức NT</strong> (severity) theo bảng AIAG-VDA. Một ảnh hưởng có thể có
+        <strong>Điểm (S)</strong> (severity) theo bảng AIAG-VDA. Một ảnh hưởng có thể có
         nhiều <strong>nguyên nhân</strong> — bấm <strong>+ Thêm nguyên nhân</strong>.
         Bấm <strong>✨ AI</strong> để gợi ý nội dung.
       </p>
@@ -106,7 +106,7 @@ export function FailureAnalysisCards({
                     <th className="fa-col-fm">Dạng hỏng hóc (phủ định yêu cầu)</th>
                     <th className="fa-col-cl">Phân loại</th>
                     <th className="fa-col-ef">Ảnh hưởng</th>
-                    <th className="fa-col-sev">Mức NT</th>
+                    <th className="fa-col-sev">Điểm (S)</th>
                     <th className="fa-col-ca">Nguyên nhân</th>
                     <th className="fa-col-ai"></th>
                   </tr>

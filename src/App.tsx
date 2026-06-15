@@ -17,6 +17,8 @@ import {
 } from "./lib/fallbackGenerator";
 import { hasGeminiKey } from "./lib/gemini";
 import { makeId, toPfmeaRow } from "./lib/rpn";
+import { findSeed } from "./lib/seeds";
+import { buildRowsFromSeed } from "./lib/seedTypes";
 import { downloadCsv } from "./lib/csv";
 import { exportToTemplate } from "./lib/excelExport";
 import { ALL_COLUMNS, STEP_COLUMNS } from "./lib/columns";
@@ -131,6 +133,21 @@ export default function App() {
   };
 
   const handleGenerate = async () => {
+    // Ưu tiên 1: nếu model base có seed dựng sẵn (nhập từ Excel thực tế) → dùng seed.
+    const mbName = findModelBase(sel.groupId, sel.productId, sel.lineId, sel.modelBaseId)?.name;
+    const seed = findSeed(mbName);
+    if (seed) {
+      const built = buildRowsFromSeed(seed);
+      setRows(built);
+      setNote(
+        `Đã nhập PFMEA dựng sẵn cho ${mbName} (chức năng, yêu cầu, dạng hỏng hóc, ảnh hưởng + tiêu chí nghiêm trọng, nguyên nhân). Hoàn thiện O/D & biện pháp ở các bước sau.`,
+      );
+      setInputOpen(false);
+      setActiveStep(1);
+      setView("editor");
+      return;
+    }
+
     // Nếu danh mục đã lưu sẵn chức năng + yêu cầu → dựng thẳng từ đó (không sinh lại).
     if (stepsHaveSavedReqs(workSteps)) {
       const built = buildRowsFromCatalogSteps(workSteps);
