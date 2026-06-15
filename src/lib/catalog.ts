@@ -108,6 +108,15 @@ export const DEFAULT_CATALOG: Catalog = {
                 "Hàn MAG",
                 "Kiểm tra độ bền & độ kín mối hàn",
               ]),
+              // G823 có PFMEA dựng sẵn (seed từ file Excel thực tế) — xem src/lib/g823Seed.ts
+              base("G823", [
+                "1. Kiểm tra phôi đầu vào",
+                "2. Hàn Cap",
+                "3. Hàn Joint",
+                "Đóng dấu",
+                "4. Hàn gia cường",
+                "5. Kiểm tra dò khí",
+              ]),
             ]),
           ],
         },
