@@ -18,6 +18,12 @@ export const STATUS_LABELS: Record<PfmeaStatus, string> = {
 
 export interface PfmeaRow {
   id: string;
+  /**
+   * Mã nhóm dạng hỏng hóc. Các dòng (cause) cùng một dạng hỏng hóc — chia sẻ
+   * chung yêu cầu / dạng hỏng hóc / ảnh hưởng / mức nghiêm trọng — có cùng fmId.
+   * Mỗi nguyên nhân = 1 dòng PfmeaRow trong cùng nhóm fmId.
+   */
+  fmId: string;
 
   // Step 1 — Structural & Functional Analysis
   processStep: string;

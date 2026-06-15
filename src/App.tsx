@@ -32,9 +32,10 @@ import {
 const EMPTY_META: ProjectMeta = { projectName: "", scope: "", fmeaLead: "", teamMembers: "" };
 const EMPTY_SEL: Selection = { groupId: "", productId: "", lineId: "", modelBaseId: "" };
 
-function blankRow(processStep = "", fn = "", requirement = ""): PfmeaRow {
+function blankRow(processStep = "", fn = "", requirement = "", fmId = makeId()): PfmeaRow {
   return {
     id: makeId(),
+    fmId,
     processStep, function: fn, requirement,
     failureMode: "", effect: "", cause: "",
     severity: 1, classification: "", occurrence: 1,
@@ -184,15 +185,19 @@ export default function App() {
     }
 
     // Gom các dòng theo công đoạn (giữ thứ tự) để ghi lại chức năng + yêu cầu.
-    const map = new Map<string, { name: string; fn: string; reqs: string[] }>();
+    const map = new Map<string, { name: string; fn: string; reqs: string[]; seenFm: Set<string> }>();
     const order: string[] = [];
     rows.forEach((r) => {
       const key = r.processStep.trim().toLowerCase() || `__${r.id}`;
       if (!map.has(key)) {
-        map.set(key, { name: r.processStep, fn: r.function, reqs: [] });
+        map.set(key, { name: r.processStep, fn: r.function, reqs: [], seenFm: new Set() });
         order.push(key);
       }
-      map.get(key)!.reqs.push(r.requirement);
+      const g = map.get(key)!;
+      // Mỗi dạng hỏng hóc (fmId) chỉ ghi 1 yêu cầu, dù có nhiều dòng nguyên nhân.
+      if (g.seenFm.has(r.fmId)) return;
+      g.seenFm.add(r.fmId);
+      g.reqs.push(r.requirement);
     });
 
     mb.steps = order.map((k) => {
@@ -233,6 +238,48 @@ export default function App() {
     insertAfter(afterId, blankRow(source.processStep, source.function, source.requirement));
   };
   const addStep = () => setRows((prev) => [...prev, blankRow()]);
+
+  // ----- cause-level helpers (nhiều nguyên nhân cho 1 dạng hỏng hóc) -----
+  /** Cập nhật các trường dùng chung cho mọi nguyên nhân của cùng dạng hỏng hóc. */
+  const updateFmGroup = (fmId: string, patch: Partial<PfmeaRow>) => {
+    setRows((prev) =>
+      prev.map((r) => {
+        if (r.fmId !== fmId) return r;
+        const next = { ...r, ...patch };
+        next.rpn = next.severity * next.occurrence * next.detection;
+        next.rpnAfter = next.sevAfter * next.occAfter * next.detAfter;
+        return next;
+      }),
+    );
+  };
+  /** Thêm 1 nguyên nhân (dòng mới) vào cuối nhóm dạng hỏng hóc, kế thừa trường dùng chung. */
+  const addCause = (fmId: string) => {
+    setRows((prev) => {
+      const idxs = prev.map((r, i) => (r.fmId === fmId ? i : -1)).filter((i) => i >= 0);
+      if (idxs.length === 0) return prev;
+      const lastIdx = idxs[idxs.length - 1];
+      const src = prev[lastIdx];
+      const newRow: PfmeaRow = {
+        ...blankRow(src.processStep, src.function, src.requirement, fmId),
+        failureMode: src.failureMode,
+        classification: src.classification,
+        effect: src.effect,
+        severity: src.severity,
+      };
+      newRow.rpn = newRow.severity * newRow.occurrence * newRow.detection;
+      return [...prev.slice(0, lastIdx + 1), newRow, ...prev.slice(lastIdx + 1)];
+    });
+  };
+  /** Xóa 1 nguyên nhân; giữ lại tối thiểu 1 dòng cho mỗi dạng hỏng hóc. */
+  const deleteCause = (id: string) => {
+    setRows((prev) => {
+      const target = prev.find((r) => r.id === id);
+      if (!target) return prev;
+      const sameFm = prev.filter((r) => r.fmId === target.fmId);
+      if (sameFm.length <= 1) return prev; // không xóa nguyên nhân cuối cùng
+      return prev.filter((r) => r.id !== id);
+    });
+  };
 
   // ----- step-2 grouping + AI suggest -----
   const groups: StepGroup[] = useMemo(() => {
@@ -433,6 +480,9 @@ export default function App() {
                   <FailureAnalysisCards
                     groups={groups}
                     onUpdateRow={updateRow}
+                    onUpdateFmGroup={updateFmGroup}
+                    onAddCause={addCause}
+                    onDeleteCause={deleteCause}
                     onAiSuggestRow={aiSuggestRow}
                     onAiSuggestGroup={aiSuggestGroup}
                     busy={busy}
