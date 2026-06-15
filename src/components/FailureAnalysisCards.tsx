@@ -1,5 +1,5 @@
 import type { PfmeaRow } from "../types";
-import { SEVERITY_RULES } from "../lib/severityRules";
+import { SEVERITY_RULES, SEVERITY_RULES_PROCESS } from "../lib/severityRules";
 
 export interface StepGroup {
   key: string;
@@ -186,11 +186,20 @@ export function FailureAnalysisCards({
                                     }}
                                   >
                                     <option value="">+ Ghép tiêu chí nghiêm trọng…</option>
-                                    {SEVERITY_RULES.map((rule) => (
-                                      <option key={rule.rank} value={rule.rank}>
-                                        [{rule.rank}] {rule.category} — {rule.text}
-                                      </option>
-                                    ))}
+                                    <optgroup label="── Ảnh hưởng đến khách hàng ──">
+                                      {SEVERITY_RULES.map((rule) => (
+                                        <option key={`cust-${rule.rank}`} value={rule.rank}>
+                                          [{rule.rank}] {rule.category} — {rule.text}
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                    <optgroup label="── Ảnh hưởng đến chế tạo / lắp ráp ──">
+                                      {SEVERITY_RULES_PROCESS.map((rule) => (
+                                        <option key={`proc-${rule.rank}`} value={rule.rank}>
+                                          [{rule.rank}] {rule.category} — {rule.text}
+                                        </option>
+                                      ))}
+                                    </optgroup>
                                   </select>
                                 </div>
                               </td>
