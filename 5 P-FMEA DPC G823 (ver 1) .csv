@@ -1,0 +1,117 @@
+﻿　＜GL SQS0811 Quy định vận dụng D/P FMEA 　Phụ lục - 4  GL SQS0811 D/P FMEA運用規定　付表-4 ＞,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,Page ページ：  5/5,
+,,,,,,,,,,,,,,,,,,
+Công đoạn / Bước /  Chức năng,"Dạng hỏng hóc mang tính tiềm ẩn
+潜在的故障モード","Ảnh hưởng của hỏng hóc mang tính tiềm ẩn
+潜在的故障影響","Mức độ nghiêm trọng
+厳しさ
+(S)","Phân loại
+分類","Nguyên nhân của hỏng hóc mang tính tiềm ẩn
+潜在的故障原因","Phản ánh lỗi quá khứ
+過去トラ反映","Tần suất phát sinh
+発生頻度
+(O)","Quản lý quy trình hiện tại
+Dự phòng
+現行のプロセス管理
+予防","Quản lý quy trình hiện tại
+Phát hiện ra
+現行のプロセス管理
+検出","Phát hiện ra
+検出
+(D)",ＲＰＮ,"Biện pháp đề xuất
+推奨処置","Người chịu trách nhiệm và thời hạn hoàn thành mục tiêu
+責任者及び
+目標完了期限",Kết quả xử lý　処置結果,,,,
+,,,,,,,,,,,,,,,,,,
+プロセス,,,,,,,,,,,,,,"Biện pháp được sử dụng và ngày hoàn thành
+取られた処置
+及び完了日","Mức độ nghiêm trọng
+厳しさ","Tần suất phát sinh
+発生頻度","Phát hiện ra
+検出",RPN
+ステップ/機能,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Hạng mục yêu cầu,,,,,,,,,,,,,,,,,,
+要求事項,,,,,,,,,,,,,,,,,,
+"5.Kiểm tra dò khí
+
+Chức năng:
+Kiểm tra các mối hàn xem có bị hở không
+溶接ビードにて隙間があるかを確認する事
+Yêu cầu:
+-Kiểm tra dò rỉ khí: Không dò rỉ khí tại áp suất 490 kPa.
+-Bề mặt mối hàn giữa mainpipe và damper cap: phải được hàn tròn kín xung quanh; phải có vết chảy vật liệu; không có vết nứt, vết cháy thủng và bavia
+-Mặt ngoài: không có xước, xỉ hàn, va đập, bất thường, rỉ trên bề mặt  và lòng trong chi tiết","Bỏ lọt sản phẩm bị dò rỉ khí tại áp suất 490 kPa
+","Nguy cơ dò rỉ dầu
+=>Làm giảm chức năng chính (có thể thao tác xe, tuy nhiên, mức độ tính năng suy giảm)",7,,"Áp lực khí nguồn, khí thổi, khí kẹp không đạt",,2,Quy định giới hạn cho áp lực khí,Kiểm tra áp lực khí trước khi sản xuất,7,98,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,,,,,Thời gian dò khí quá ít,,2,"Quy định giới hạn thời gian dò khí
+",Kiểm tra cài đặt thời gian dò khí trước khi sản xuất,7,98,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,,,,,Mức nước không ngập sản phẩm,,2,Quy định mức nước,Kiểm tra tình trạng mức nước trước khi sản xuất,7,98,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,,,,,Đầu thổi khí bị tắc,,2,Bảo dưỡng đầu thổi khí định kỳ,Kiểm tra tình trạng thổi khí bằng cách dò thử 4 mẫu thử để xem có hở khí không,5,70,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,,,,,"Đồ gá, đầu bịt bị nứt, vỡ, biến dạng, rơ lỏng",,2,Quy định tần suất thay thế,"Kiểm tra đồ gá, đầu bịt trước khi sản xuất",7,98,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,"Sản phẩm không được hàn tròn kín xung quanh, không có vết chảy vật liệu, có vết nứt, vết cháy thủng và bavia","Nguy cơ dò rỉ dầu =>Làm giảm chức năng chính (có thể thao tác xe, tuy nhiên, mức độ tính năng suy giảm)",7,,Sản phẩm NG từ công đoạn trước bị lưu suất,,2,Đào tạo hướng dẫn nhân viên,Kiểm tra 100% bề mặt mối hàn giữa mainpipe và damper cap,7,98,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,"Sản phẩm xước bề mặt ngoài, có xỉ hàn, va đập, bất thường","Có lỗi mặt ngoài hoặc tiếng kêu, có thể thao tác xe được, có điểm không phù hợp trên sản phẩm mà hầu hết khách hàng (hơn 75%) nhận ra                                                                                                  ",4,,Sản phẩm NG từ công đoạn trước bị lưu suất,,2,Đào tạo hướng dẫn nhân viên,Kiểm tra 100% bề mặt sản phẩm,7,56,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+,Sản phẩm bị rỉ trên bề mặt  và lòng trong chi tiết,"Có lỗi mặt ngoài hoặc tiếng kêu, có thể thao tác xe được, có điểm không phù hợp trên sản phẩm mà hầu hết khách hàng (hơn 75%) nhận ra                                                                                                  ",4,,Nồng độ dầu chống rỉ không đạt,,2,Quy định giá trị nồng độ chống gì,Kiểm tra nồng độ dầu chống gỉ trước khi sản xuất,7,56,"•Không cần thiết đưa ra đối sách
+推奨処置不要",,,,,,
+Bản áp dụng số 240101 （Các BU）　適用No.240101版（各BU）,,,,,,,,,,,,,,,,,,Thời gian lưu:  20 năm sau ngày dừng sản xuất chủng loại　保管期間：機種生産打切り日後20年
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+, ,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
