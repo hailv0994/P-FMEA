@@ -1,10 +1,12 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { Catalog, CatStep } from "../lib/catalog";
 import type { ProjectMeta } from "../types";
+import { reorder } from "../lib/reorder";
 
 export interface Selection {
   groupId: string;
   productId: string;
+  lineId: string;
   modelBaseId: string;
 }
 
@@ -13,6 +15,7 @@ interface SetupPanelProps {
   sel: Selection;
   onSelectGroup: (id: string) => void;
   onSelectProduct: (id: string) => void;
+  onSelectLine: (id: string) => void;
   onSelectModelBase: (id: string) => void;
   steps: CatStep[];
   onStepsChange: (steps: CatStep[]) => void;
@@ -30,6 +33,7 @@ export function SetupPanel({
   sel,
   onSelectGroup,
   onSelectProduct,
+  onSelectLine,
   onSelectModelBase,
   steps,
   onStepsChange,
@@ -49,22 +53,29 @@ export function SetupPanel({
     () => group?.products.find((p) => p.id === sel.productId),
     [group, sel.productId],
   );
-  const modelBase = useMemo(
-    () => product?.modelBases.find((m) => m.id === sel.modelBaseId),
-    [product, sel.modelBaseId],
+  const line = useMemo(
+    () => product?.lines.find((l) => l.id === sel.lineId),
+    [product, sel.lineId],
   );
+  const modelBase = useMemo(
+    () => line?.modelBases.find((m) => m.id === sel.modelBaseId),
+    [line, sel.modelBaseId],
+  );
+
+  const dragIndex = useRef<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
 
   const setStep = (id: string, name: string) =>
     onStepsChange(steps.map((s) => (s.id === id ? { ...s, name } : s)));
   const addStep = () =>
     onStepsChange([...steps, { id: `tmp-${Date.now()}-${Math.random()}`, name: "" }]);
   const delStep = (id: string) => onStepsChange(steps.filter((s) => s.id !== id));
-  const move = (i: number, dir: -1 | 1) => {
-    const j = i + dir;
-    if (j < 0 || j >= steps.length) return;
-    const next = [...steps];
-    [next[i], next[j]] = [next[j], next[i]];
-    onStepsChange(next);
+
+  const onDrop = (to: number) => {
+    const from = dragIndex.current;
+    dragIndex.current = null;
+    setOverIndex(null);
+    if (from !== null) onStepsChange(reorder(steps, from, to));
   };
 
   return (
@@ -73,8 +84,8 @@ export function SetupPanel({
         <div>
           <h2 className="panel-title">Chọn sản phẩm</h2>
           <p className="panel-hint">
-            Chọn Nhóm → Sản phẩm → Model base để hiện khung công đoạn, rồi chỉnh
-            sửa nếu cần và tạo PFMEA.
+            Chọn Nhóm → Sản phẩm → Dây chuyền → Model base để hiện khung công đoạn,
+            rồi chỉnh sửa (kéo để sắp xếp) và tạo PFMEA.
           </p>
         </div>
         <div className="head-actions">
@@ -95,41 +106,37 @@ export function SetupPanel({
           <select value={sel.groupId} onChange={(e) => onSelectGroup(e.target.value)}>
             <option value="">— Chọn nhóm —</option>
             {catalog.groups.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
+              <option key={g.id} value={g.id}>{g.name}</option>
             ))}
           </select>
         </label>
 
         <label className="field">
           <span>Sản phẩm</span>
-          <select
-            value={sel.productId}
-            onChange={(e) => onSelectProduct(e.target.value)}
-            disabled={!group}
-          >
+          <select value={sel.productId} onChange={(e) => onSelectProduct(e.target.value)} disabled={!group}>
             <option value="">{group ? "— Chọn sản phẩm —" : "Chọn nhóm trước"}</option>
             {group?.products.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field">
+          <span>Dây chuyền</span>
+          <select value={sel.lineId} onChange={(e) => onSelectLine(e.target.value)} disabled={!product}>
+            <option value="">{product ? "— Chọn dây chuyền —" : "Chọn sản phẩm trước"}</option>
+            {product?.lines.map((l) => (
+              <option key={l.id} value={l.id}>{l.name}</option>
             ))}
           </select>
         </label>
 
         <label className="field">
           <span>Model base</span>
-          <select
-            value={sel.modelBaseId}
-            onChange={(e) => onSelectModelBase(e.target.value)}
-            disabled={!product}
-          >
-            <option value="">{product ? "— Chọn model base —" : "Chọn sản phẩm trước"}</option>
-            {product?.modelBases.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name}
-              </option>
+          <select value={sel.modelBaseId} onChange={(e) => onSelectModelBase(e.target.value)} disabled={!line}>
+            <option value="">{line ? "— Chọn model base —" : "Chọn dây chuyền trước"}</option>
+            {line?.modelBases.map((m) => (
+              <option key={m.id} value={m.id}>{m.name}</option>
             ))}
           </select>
         </label>
@@ -147,13 +154,27 @@ export function SetupPanel({
       {modelBase ? (
         <div className="skeleton">
           <div className="skeleton-head">
-            <h3>Khung công đoạn — {product?.name} / {modelBase.name}</h3>
-            <span className="muted">{steps.length} công đoạn · có thể chỉnh sửa</span>
+            <h3>Khung công đoạn — {product?.name} / {line?.name} / {modelBase.name}</h3>
+            <span className="muted">{steps.length} công đoạn · kéo ⠿ để sắp xếp</span>
           </div>
 
           <ol className="step-list">
             {steps.map((s, i) => (
-              <li key={s.id} className="step-item">
+              <li
+                key={s.id}
+                className={`step-item ${overIndex === i ? "drag-over" : ""}`}
+                onDragOver={(e) => { e.preventDefault(); setOverIndex(i); }}
+                onDrop={() => onDrop(i)}
+              >
+                <span
+                  className="drag-handle"
+                  draggable
+                  title="Kéo để sắp xếp"
+                  onDragStart={() => { dragIndex.current = i; }}
+                  onDragEnd={() => { dragIndex.current = null; setOverIndex(null); }}
+                >
+                  ⠿
+                </span>
                 <span className="step-no">{i + 1}</span>
                 <input
                   className="step-input"
@@ -161,17 +182,9 @@ export function SetupPanel({
                   placeholder="Tên công đoạn"
                   onChange={(e) => setStep(s.id, e.target.value)}
                 />
-                <div className="step-tools">
-                  <button className="icon-btn" type="button" title="Lên" onClick={() => move(i, -1)} disabled={i === 0}>
-                    ↑
-                  </button>
-                  <button className="icon-btn" type="button" title="Xuống" onClick={() => move(i, 1)} disabled={i === steps.length - 1}>
-                    ↓
-                  </button>
-                  <button className="icon-btn danger" type="button" title="Xóa" onClick={() => delStep(s.id)}>
-                    ×
-                  </button>
-                </div>
+                <button className="icon-btn danger" type="button" title="Xóa" onClick={() => delStep(s.id)}>
+                  ×
+                </button>
               </li>
             ))}
           </ol>
@@ -192,8 +205,8 @@ export function SetupPanel({
         </div>
       ) : (
         <p className="muted skeleton-hint">
-          Chọn đủ Nhóm · Sản phẩm · Model base để hiện khung công đoạn. Chưa có
-          dữ liệu? Mở <strong>Quản trị danh mục</strong> để nhập.
+          Chọn đủ Nhóm · Sản phẩm · Dây chuyền · Model base để hiện khung công đoạn.
+          Chưa có dữ liệu? Mở <strong>Quản trị danh mục</strong> để nhập.
         </p>
       )}
     </section>

@@ -14,10 +14,15 @@ export interface ModelBase {
   name: string;
   steps: CatStep[];
 }
-export interface Product {
+export interface Line {
   id: string;
   name: string;
   modelBases: ModelBase[];
+}
+export interface Product {
+  id: string;
+  name: string;
+  lines: Line[];
 }
 export interface Group {
   id: string;
@@ -29,7 +34,7 @@ export interface Catalog {
   groups: Group[];
 }
 
-const STORAGE_KEY = "pfmea-catalog-v1";
+const STORAGE_KEY = "pfmea-catalog-v2";
 
 let seq = 0;
 export function uid(prefix = "id"): string {
@@ -44,10 +49,13 @@ function step(name: string): CatStep {
 function base(name: string, steps: string[]): ModelBase {
   return { id: uid("mb"), name, steps: steps.map(step) };
 }
+function line(name: string, modelBases: ModelBase[]): Line {
+  return { id: uid("ln"), name, modelBases };
+}
 
 /** Danh mục mặc định — seed sẵn nhóm PRO2 (Astemo) theo CLAUDE.md. */
 export const DEFAULT_CATALOG: Catalog = {
-  version: 1,
+  version: 2,
   groups: [
     { id: uid("gr"), name: "PRO1", products: [] },
     {
@@ -57,39 +65,45 @@ export const DEFAULT_CATALOG: Catalog = {
         {
           id: uid("pr"),
           name: "Fork Pipe",
-          modelBases: [
-            base("Base", [
-              "Tiện Fork Pipe",
-              "Khoan lỗ thoát dầu",
-              "Mài bề mặt trượt",
-              "Mạ Ni-Cr cứng",
-              "Đánh bóng",
+          lines: [
+            line("Dây chuyền chính", [
+              base("Base", [
+                "Tiện Fork Pipe",
+                "Khoan lỗ thoát dầu",
+                "Mài bề mặt trượt",
+                "Mạ Ni-Cr cứng",
+                "Đánh bóng",
+              ]),
             ]),
           ],
         },
         {
           id: uid("pr"),
           name: "Rod",
-          modelBases: [
-            base("Base", [
-              "Tiện Rod",
-              "Cán ren",
-              "Mạ Ni-Cr cứng / Cr trang trí",
-              "Đánh bóng",
+          lines: [
+            line("Dây chuyền chính", [
+              base("Base", [
+                "Tiện Rod",
+                "Cán ren",
+                "Mạ Ni-Cr cứng / Cr trang trí",
+                "Đánh bóng",
+              ]),
             ]),
           ],
         },
         {
           id: uid("pr"),
           name: "Damper Case Comp",
-          modelBases: [
-            base("Base", [
-              "Hàn spot Damper Case",
-              "Hàn project",
-              "Hàn condenser",
-              "Hàn seam",
-              "Hàn MAG",
-              "Kiểm tra độ bền & độ kín mối hàn",
+          lines: [
+            line("Dây chuyền hàn", [
+              base("Base", [
+                "Hàn spot Damper Case",
+                "Hàn project",
+                "Hàn condenser",
+                "Hàn seam",
+                "Hàn MAG",
+                "Kiểm tra độ bền & độ kín mối hàn",
+              ]),
             ]),
           ],
         },

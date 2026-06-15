@@ -360,6 +360,29 @@ body {
   gap: 2px;
 }
 
+/* drag-to-reorder */
+.drag-handle {
+  cursor: grab;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  user-select: none;
+  flex-shrink: 0;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
+.step-item.drag-over,
+.adm-steps li.drag-over {
+  outline: 2px dashed var(--blue);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.adm-steps li {
+  align-items: center;
+}
+
 /* ---------- Catalog admin ---------- */
 .admin {
   background: var(--white);
@@ -395,6 +418,11 @@ body {
   padding-left: 12px;
   border-left: 2px solid var(--g2);
 }
+.adm-line {
+  margin: 8px 0 8px 18px;
+  padding-left: 12px;
+  border-left: 2px solid #b45309;
+}
 .adm-mb {
   margin: 8px 0 8px 18px;
   padding-left: 12px;
@@ -418,6 +446,9 @@ body {
 }
 .adm-tag.tag-p {
   background: var(--g2);
+}
+.adm-tag.tag-l {
+  background: #b45309;
 }
 .adm-tag.tag-m {
   background: var(--g3);

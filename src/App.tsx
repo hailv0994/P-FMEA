@@ -23,7 +23,7 @@ import {
 } from "./lib/catalog";
 
 const EMPTY_META: ProjectMeta = { projectName: "", scope: "", fmeaLead: "", teamMembers: "" };
-const EMPTY_SEL: Selection = { groupId: "", productId: "", modelBaseId: "" };
+const EMPTY_SEL: Selection = { groupId: "", productId: "", lineId: "", modelBaseId: "" };
 
 function blankRow(processStep = "", fn = "", requirement = ""): PfmeaRow {
   return {
@@ -60,20 +60,26 @@ export default function App() {
   const findGroup = (id: string) => catalog.groups.find((g) => g.id === id);
   const findProduct = (gid: string, pid: string) =>
     findGroup(gid)?.products.find((p) => p.id === pid);
-  const findModelBase = (gid: string, pid: string, mid: string) =>
-    findProduct(gid, pid)?.modelBases.find((m) => m.id === mid);
+  const findLine = (gid: string, pid: string, lid: string) =>
+    findProduct(gid, pid)?.lines.find((l) => l.id === lid);
+  const findModelBase = (gid: string, pid: string, lid: string, mid: string) =>
+    findLine(gid, pid, lid)?.modelBases.find((m) => m.id === mid);
 
   const selectGroup = (id: string) => {
-    setSel({ groupId: id, productId: "", modelBaseId: "" });
+    setSel({ groupId: id, productId: "", lineId: "", modelBaseId: "" });
     setWorkSteps([]);
   };
   const selectProduct = (id: string) => {
-    setSel((s) => ({ ...s, productId: id, modelBaseId: "" }));
+    setSel((s) => ({ ...s, productId: id, lineId: "", modelBaseId: "" }));
+    setWorkSteps([]);
+  };
+  const selectLine = (id: string) => {
+    setSel((s) => ({ ...s, lineId: id, modelBaseId: "" }));
     setWorkSteps([]);
   };
   const selectModelBase = (id: string) => {
     setSel((s) => ({ ...s, modelBaseId: id }));
-    const mb = findModelBase(sel.groupId, sel.productId, id);
+    const mb = findModelBase(sel.groupId, sel.productId, sel.lineId, id);
     setWorkSteps(mb ? clone(mb.steps) : []);
     const product = findProduct(sel.groupId, sel.productId);
     if (mb && product) {
@@ -87,8 +93,9 @@ export default function App() {
   const selectionSummary = () => {
     const g = findGroup(sel.groupId);
     const p = findProduct(sel.groupId, sel.productId);
-    const m = findModelBase(sel.groupId, sel.productId, sel.modelBaseId);
-    return [g?.name, p?.name, m?.name].filter(Boolean).join(" · ");
+    const l = findLine(sel.groupId, sel.productId, sel.lineId);
+    const m = findModelBase(sel.groupId, sel.productId, sel.lineId, sel.modelBaseId);
+    return [g?.name, p?.name, l?.name, m?.name].filter(Boolean).join(" · ");
   };
 
   // ----- generation -----
@@ -237,6 +244,7 @@ export default function App() {
             sel={sel}
             onSelectGroup={selectGroup}
             onSelectProduct={selectProduct}
+            onSelectLine={selectLine}
             onSelectModelBase={selectModelBase}
             steps={workSteps}
             onStepsChange={setWorkSteps}
