@@ -56,9 +56,13 @@ export function FailureAnalysisCards({
     );
   }
 
-  /** Ghép câu tiêu chuẩn nghiêm trọng vào ô Ảnh hưởng + chấm điểm Mức NT theo rank. */
-  const applySeverityRule = (fmId: string, current: string, rank: number) => {
-    const rule = SEVERITY_RULES.find((r) => r.rank === rank);
+  /** Ghép câu tiêu chuẩn nghiêm trọng vào ô Ảnh hưởng + chấm điểm (S) theo rank.
+   *  val có dạng "cust:9" (ảnh hưởng khách hàng) hoặc "proc:7" (ảnh hưởng công đoạn). */
+  const applySeverityRule = (fmId: string, current: string, val: string) => {
+    const [scope, rankStr] = val.split(":");
+    const rank = Number(rankStr);
+    const pool = scope === "proc" ? SEVERITY_RULES_PROCESS : SEVERITY_RULES;
+    const rule = pool.find((r) => r.rank === rank);
     if (!rule) return;
     const base = current.trim();
     const already = base.includes(rule.text);
@@ -180,22 +184,22 @@ export function FailureAnalysisCards({
                                     value=""
                                     title="Ghép câu tiêu chuẩn mức độ nghiêm trọng (chấm điểm theo rank)"
                                     onChange={(e) => {
-                                      const rank = Number(e.target.value);
-                                      if (rank) applySeverityRule(head.fmId, head.effect, rank);
+                                      if (e.target.value)
+                                        applySeverityRule(head.fmId, head.effect, e.target.value);
                                       e.target.value = "";
                                     }}
                                   >
                                     <option value="">+ Ghép tiêu chí nghiêm trọng…</option>
                                     <optgroup label="── Ảnh hưởng đến khách hàng ──">
                                       {SEVERITY_RULES.map((rule) => (
-                                        <option key={`cust-${rule.rank}`} value={rule.rank}>
+                                        <option key={`cust-${rule.rank}`} value={`cust:${rule.rank}`}>
                                           [{rule.rank}] {rule.category} — {rule.text}
                                         </option>
                                       ))}
                                     </optgroup>
                                     <optgroup label="── Ảnh hưởng đến chế tạo / lắp ráp ──">
                                       {SEVERITY_RULES_PROCESS.map((rule) => (
-                                        <option key={`proc-${rule.rank}`} value={rule.rank}>
+                                        <option key={`proc-${rule.rank}`} value={`proc:${rule.rank}`}>
                                           [{rule.rank}] {rule.category} — {rule.text}
                                         </option>
                                       ))}
