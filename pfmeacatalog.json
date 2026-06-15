@@ -1,0 +1,221 @@
+{
+  "version": 2,
+  "groups": [
+    {
+      "id": "256f7e4a-c813-4c74-9582-b5c703fd6eac",
+      "name": "PRO1",
+      "products": []
+    },
+    {
+      "id": "b1dbd0ef-1291-4b30-a10a-9def42f477f3",
+      "name": "PRO2",
+      "products": [
+        {
+          "id": "0647efd4-eea6-4aee-a823-c46a5b4ebc66",
+          "name": "Fork Pipe",
+          "lines": [
+            {
+              "id": "ba5f4935-997e-4fad-ab2b-affd1b5ddd7c",
+              "name": "Gia công line 1, 2",
+              "modelBases": [
+                {
+                  "id": "be25b0d0-1a7e-47ff-942b-4a66db3606d7",
+                  "name": "HGJR",
+                  "steps": [
+                    {
+                      "id": "ea5692c2-4fc0-4d3e-9641-d6476453db12",
+                      "name": "Kiểm tra phôi đầu vào"
+                    },
+                    {
+                      "id": "e9920906-82a4-4e15-aea2-7c6d41bc9b45",
+                      "name": "Gia công"
+                    },
+                    {
+                      "id": "d127cde1-22bc-4458-a9bc-459b7ec3f13a",
+                      "name": "Khoan và lấy via"
+                    },
+                    {
+                      "id": "83e1753c-1a39-4e16-9ee7-648b94dd3d01",
+                      "name": "Mài thô"
+                    },
+                    {
+                      "id": "c8d73b76-7080-41f3-bc89-3672e5f70014",
+                      "name": "Mài trung"
+                    },
+                    {
+                      "id": "10f332d9-f881-4150-b56b-e8a58b1e9771",
+                      "name": "Mài tinh"
+                    },
+                    {
+                      "id": "9c4f2118-0cb9-4bef-92c4-9c524fbf2189",
+                      "name": "Kiểm tra và xuất hàng"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "6f88c1a7-6801-42bb-9ae0-cbfb21d61c6b",
+              "name": "Gia công line 3, 4",
+              "modelBases": [
+                {
+                  "id": "b331c45f-a33e-41b4-8fb6-6e22e8e3462f",
+                  "name": "G823",
+                  "steps": [
+                    {
+                      "id": "eb3de048-cae6-43c1-a771-0b1ad13f883e",
+                      "name": "Kiểm tra phôi đầu vào"
+                    },
+                    {
+                      "id": "e8aed7cb-5165-4e46-a40f-df982699ed05",
+                      "name": "Gia công"
+                    },
+                    {
+                      "id": "cac15071-d5a4-4093-8d7a-bacda532c76f",
+                      "name": "Mài thô"
+                    },
+                    {
+                      "id": "f5f89d01-b1ad-42b0-8193-a82c87136084",
+                      "name": "Mài trung"
+                    },
+                    {
+                      "id": "c905b4a1-8690-46fe-bca4-7288deceefd2",
+                      "name": "Mài tinh"
+                    },
+                    {
+                      "id": "51a02ef0-538d-465c-8670-9457a413c8a6",
+                      "name": "Kiểm tra và xuất hàng"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "751a98f0-54a6-4653-8fee-3d8325458011",
+          "name": "Rod",
+          "lines": [
+            {
+              "id": "9c7b6cfd-d758-48ff-af4c-8f6d1658b300",
+              "name": "Gia công",
+              "modelBases": [
+                {
+                  "id": "4b099d11-5276-4217-92ab-86d995e8333c",
+                  "name": "HGJR",
+                  "steps": [
+                    {
+                      "id": "f87a1450-c73f-4d87-8de1-771f0f9df321",
+                      "name": "Kiểm tra phôi đầu vào"
+                    },
+                    {
+                      "id": "ff84b6ad-5bf8-4550-be05-30573b9f8e8d",
+                      "name": "Gia công"
+                    },
+                    {
+                      "id": "a468d772-2314-4721-893d-a1d6ec5d7ba4",
+                      "name": "Cán ren"
+                    },
+                    {
+                      "id": "43a3fb0b-3844-4307-b0f7-bb3cb1127859",
+                      "name": "Mài thô"
+                    },
+                    {
+                      "id": "7594ec86-789d-4ff1-bf94-15dd3e060469",
+                      "name": "Mài tinh"
+                    },
+                    {
+                      "id": "f12ab8be-782a-4bd5-922a-2ed8206d9a61",
+                      "name": "Kiểm tra và xuất hàng"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "224e1b2a-6b3a-470b-8db3-a00e7e24698f",
+          "name": "Damper Case Comp",
+          "lines": [
+            {
+              "id": "0a004bd1-99a9-4b10-818c-d9e9e086ba7c",
+              "name": "Line 1",
+              "modelBases": [
+                {
+                  "id": "58d7b8a0-904d-4fc5-880f-a20b97ddc486",
+                  "name": "G823",
+                  "steps": [
+                    {
+                      "id": "d9c07115-0000-4340-a132-3dcbfbf12f11",
+                      "name": "Kiểm tra phôi đầu vào"
+                    },
+                    {
+                      "id": "edf7547e-21db-43f3-a5ef-c83f876c5d4c",
+                      "name": "Hàn cap"
+                    },
+                    {
+                      "id": "627943c8-20f6-4988-84b9-e2d9232a1c61",
+                      "name": "Hàn joint và đóng dấu"
+                    },
+                    {
+                      "id": "94e501f2-48e1-4399-af86-aea48e4ab83e",
+                      "name": "Hàn gia cường"
+                    },
+                    {
+                      "id": "8f2ee041-ce99-497b-b013-01e588d6ca22",
+                      "name": "Kiểm tra dò khí"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "8646edb2-c2a0-42a6-b603-ae0e3e34e1ba",
+              "name": "Line 2, 3",
+              "modelBases": [
+                {
+                  "id": "c1e53534-811a-4cf6-9c10-81712a7b788a",
+                  "name": "HGJR",
+                  "steps": [
+                    {
+                      "id": "eaac74b8-60be-4d0f-8a41-9243e6457097",
+                      "name": "Kiểm tra phôi đầu vào"
+                    },
+                    {
+                      "id": "ce2ab22f-88d0-4379-84fc-71a22082fa23",
+                      "name": "Hàn cap"
+                    },
+                    {
+                      "id": "43beabff-4ef1-4a41-b7c6-0dfa0a292263",
+                      "name": "Hàn joint"
+                    },
+                    {
+                      "id": "eb0a1544-e8c8-4b98-8e0e-f8c6b9ab979f",
+                      "name": "Kiểm tra dò khí"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "581cc345-e802-4f57-9657-c0ba3e3a09ee",
+      "name": "PRO3",
+      "products": []
+    },
+    {
+      "id": "9dbf43c7-ff0f-497e-825f-32155235240b",
+      "name": "PA",
+      "products": []
+    },
+    {
+      "id": "5526a24c-c750-4077-af83-0087246b8442",
+      "name": "ASSY",
+      "products": []
+    }
+  ]
+}
