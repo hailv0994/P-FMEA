@@ -25,6 +25,7 @@ export function toPfmeaRow(g: GeneratedRow): PfmeaRow {
   const detection = clamp(g.detection);
   return {
     id: makeId(),
+    fmId: makeId(),
     processStep: g.processStep?.trim() || "Untitled step",
     function: g.function?.trim() || "",
     requirement: g.requirement?.trim() || "",

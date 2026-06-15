@@ -1,12 +1,18 @@
 import { useMemo } from "react";
 import type { PfmeaRow } from "../types";
 
+interface ReqEntry {
+  fmId: string;
+  rowIds: string[]; // mọi dòng nguyên nhân của cùng dạng hỏng hóc
+  requirement: string;
+}
+
 interface StepGroup {
   key: string;
   processStep: string;
   fn: string;
   allRowIds: string[];
-  rows: PfmeaRow[];
+  reqs: ReqEntry[];
 }
 
 interface Props {
@@ -24,12 +30,16 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
     rows.forEach((r) => {
       const key = r.processStep.trim().toLowerCase() || `__${r.id}`;
       if (!map.has(key)) {
-        map.set(key, { key, processStep: r.processStep, fn: r.function, allRowIds: [], rows: [] });
+        map.set(key, { key, processStep: r.processStep, fn: r.function, allRowIds: [], reqs: [] });
         order.push(key);
       }
       const g = map.get(key)!;
       g.allRowIds.push(r.id);
-      g.rows.push(r);
+      // Gom theo dạng hỏng hóc (fmId): mỗi yêu cầu chỉ hiện 1 lần dù có nhiều nguyên nhân.
+      const fm = r.fmId || r.id;
+      const existing = g.reqs.find((e) => e.fmId === fm);
+      if (existing) existing.rowIds.push(r.id);
+      else g.reqs.push({ fmId: fm, rowIds: [r.id], requirement: r.requirement });
     });
 
     return order.map((k) => map.get(k)!);
@@ -40,6 +50,12 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
 
   const updateFn = (g: StepGroup, val: string) =>
     g.allRowIds.forEach((id) => onUpdateRow(id, { function: val }));
+
+  const updateReq = (entry: ReqEntry, val: string) =>
+    entry.rowIds.forEach((id) => onUpdateRow(id, { requirement: val }));
+
+  const deleteReq = (entry: ReqEntry) =>
+    entry.rowIds.forEach((id) => onDeleteRow(id));
 
   return (
     <div className="sse-list">
@@ -69,29 +85,29 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
             <div className="sse-req-section">
               <label className="sse-label">
                 Yêu cầu
-                <span className="sse-req-count">{g.rows.length}</span>
+                <span className="sse-req-count">{g.reqs.length}</span>
               </label>
               <div className="sse-req-list">
-                {g.rows.map((r, ri) => (
-                  <div className="sse-req-row" key={r.id}>
+                {g.reqs.map((entry, ri) => (
+                  <div className="sse-req-row" key={entry.fmId}>
                     <span className="sse-req-bullet">{ri + 1}</span>
                     <input
                       className="sse-input"
-                      value={r.requirement}
+                      value={entry.requirement}
                       placeholder="Hạng mục yêu cầu (→ 1 dạng hỏng hóc)"
-                      onChange={(e) => onUpdateRow(r.id, { requirement: e.target.value })}
+                      onChange={(e) => updateReq(entry, e.target.value)}
                     />
                     <button
                       className="icon-btn danger"
                       type="button"
                       title="Xóa yêu cầu này"
-                      onClick={() => onDeleteRow(r.id)}
+                      onClick={() => deleteReq(entry)}
                     >
                       ×
                     </button>
                   </div>
                 ))}
-                {g.rows.length === 0 && (
+                {g.reqs.length === 0 && (
                   <p className="muted" style={{ margin: "4px 0", fontSize: "13px" }}>
                     Chưa có yêu cầu nào.
                   </p>
