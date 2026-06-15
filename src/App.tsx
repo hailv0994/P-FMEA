@@ -6,6 +6,7 @@ import { PfmeaTable } from "./components/PfmeaTable";
 import { Stepper } from "./components/Stepper";
 import { FailureAnalysisCards, type StepGroup } from "./components/FailureAnalysisCards";
 import { ResultsView } from "./components/ResultsView";
+import { StepStructureEditor } from "./components/StepStructureEditor";
 import type { PfmeaRow, ProjectMeta, WizardStep } from "./types";
 import { STEP_LABELS } from "./types";
 import { generatePfmea, suggestForStep } from "./lib/generate";
@@ -297,7 +298,16 @@ export default function App() {
                   </div>
                 </div>
 
-                {activeStep === 2 ? (
+                {activeStep === 1 ? (
+                  <StepStructureEditor
+                    rows={rows}
+                    onUpdateRow={updateRow}
+                    onDeleteRow={deleteRow}
+                    onAddRequirementRow={(afterId, ps, fn, req) =>
+                      insertAfter(afterId, blankRow(ps, fn, req))
+                    }
+                  />
+                ) : activeStep === 2 ? (
                   <FailureAnalysisCards
                     groups={groups}
                     onUpdateRow={updateRow}
@@ -309,7 +319,7 @@ export default function App() {
                 ) : (
                   <PfmeaTable
                     rows={rows}
-                    columns={STEP_COLUMNS[activeStep as 1 | 3 | 4]}
+                    columns={STEP_COLUMNS[activeStep as 3 | 4]}
                     onUpdateRow={updateRow}
                     onDeleteRow={deleteRow}
                     onAddFailureMode={addFailureModeAfter}

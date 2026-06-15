@@ -1057,3 +1057,114 @@ button:disabled,
   border: 1px dashed var(--line);
   border-radius: var(--radius);
 }
+
+/* ---------- Step 1 — Structure editor ---------- */
+.sse-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sse-group {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--g1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.sse-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--blue-soft);
+  border-bottom: 1px solid var(--line);
+}
+.sse-no {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--g1);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+}
+.sse-step-input {
+  flex: 1;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  padding: 5px 9px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  outline: none;
+}
+.sse-step-input:focus {
+  border-color: var(--g1);
+  background: var(--white);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+.sse-body {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sse-fn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sse-label {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  width: 80px;
+}
+.sse-input {
+  flex: 1;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  outline: none;
+}
+.sse-input:focus {
+  border-color: var(--g1);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+.sse-req-section {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.sse-req-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sse-req-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sse-req-bullet {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.sse-add-req {
+  align-self: flex-start;
+  font-size: 12px;
+  padding: 4px 10px;
+}
