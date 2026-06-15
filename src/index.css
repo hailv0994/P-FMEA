@@ -265,6 +265,209 @@ body {
   font-size: 14px;
 }
 
+/* ---------- Setup panel (catalog selection) ---------- */
+.head-actions {
+  display: flex;
+  gap: 8px;
+}
+.select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.select-grid select,
+.select-grid input {
+  font: inherit;
+  color: var(--ink);
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  outline: none;
+}
+.select-grid select:focus,
+.select-grid input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+.select-grid select:disabled {
+  background: #f8fafc;
+  color: var(--muted);
+}
+
+.skeleton {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.skeleton-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.skeleton-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.skeleton-hint {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-bottom: 0;
+}
+.step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.step-no {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+.step-input {
+  flex: 1;
+  font: inherit;
+  color: var(--ink);
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  outline: none;
+}
+.step-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+.step-tools {
+  display: flex;
+  gap: 2px;
+}
+
+/* ---------- Catalog admin ---------- */
+.admin {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.admin-tree {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.adm-group {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+}
+.adm-product {
+  margin: 8px 0 8px 18px;
+  padding-left: 12px;
+  border-left: 2px solid var(--g2);
+}
+.adm-mb {
+  margin: 8px 0 8px 18px;
+  padding-left: 12px;
+  border-left: 2px solid var(--g3);
+}
+.adm-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.adm-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--g1);
+  border-radius: 5px;
+  padding: 3px 7px;
+  white-space: nowrap;
+}
+.adm-tag.tag-p {
+  background: var(--g2);
+}
+.adm-tag.tag-m {
+  background: var(--g3);
+}
+.adm-input {
+  font: inherit;
+  color: var(--ink);
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  outline: none;
+  min-width: 160px;
+}
+.adm-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+.adm-btn {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 6px 11px;
+  cursor: pointer;
+}
+.adm-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.adm-btn.danger:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.adm-steps {
+  list-style: decimal;
+  margin: 6px 0 0;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.adm-steps li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* ---------- Buttons ---------- */
 .btn-primary,
 .btn-secondary,
