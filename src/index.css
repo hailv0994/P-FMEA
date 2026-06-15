@@ -841,96 +841,96 @@ button:disabled,
   color: var(--muted);
   font-size: 12px;
 }
-.fa-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
-}
-.fa-card {
-  position: relative;
-  background: var(--white);
+/* Step 2 — failure modes laid out as horizontal rows (one per requirement) */
+.fa-table-wrap {
+  overflow-x: auto;
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  border-radius: 8px;
+  background: var(--white);
 }
-.fa-card-close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 22px;
-  height: 22px;
-  border: none;
-  border-radius: 6px;
-  background: #f1f5f9;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
+.fa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
 }
-.fa-card-close:hover {
-  background: #fee2e2;
-  color: var(--red);
-}
-.fa-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 11.5px;
+.fa-table thead th {
+  background: var(--g2);
+  color: var(--white);
   font-weight: 600;
-  color: var(--muted);
+  font-size: 11.5px;
+  text-align: left;
+  padding: 7px 8px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
 }
-.fa-field .req::after {
-  content: " *";
-  color: var(--red);
+.fa-table tbody td {
+  border-top: 1px solid var(--line);
+  padding: 5px 6px;
+  vertical-align: top;
 }
-.fa-field input,
-.fa-field textarea {
+.fa-table tbody tr:nth-child(even) td {
+  background: #fbfcfe;
+}
+.fa-row-busy {
+  opacity: 0.6;
+}
+.fa-table textarea,
+.fa-table input {
+  width: 100%;
   font: inherit;
-  font-weight: 400;
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: 7px;
-  padding: 7px 9px;
+  border-radius: 6px;
+  padding: 6px 8px;
   outline: none;
   resize: vertical;
   line-height: 1.4;
+  background: var(--white);
 }
-.fa-field input:focus,
-.fa-field textarea:focus {
+.fa-table textarea:focus,
+.fa-table input:focus {
   border-color: var(--g2);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.12);
 }
-.fa-sev input {
-  width: 70px;
-  text-align: center;
-  font-weight: 700;
-}
-.fa-add {
-  border: 2px dashed var(--line);
-  border-radius: 10px;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 600;
-  font-size: 13px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 120px;
-}
-.fa-add span {
-  font-size: 24px;
-}
-.fa-add:hover {
-  border-color: var(--g2);
+.fa-col-req { width: 17%; min-width: 150px; }
+.fa-col-fm { width: 22%; min-width: 180px; }
+.fa-col-cl { width: 64px; }
+.fa-col-ef { width: 19%; min-width: 150px; }
+.fa-col-ca { width: 19%; min-width: 150px; }
+.fa-col-sev { width: 64px; }
+.fa-col-ai { width: 60px; }
+.fa-col-req textarea { background: #f8fafc; color: var(--muted); }
+.fa-col-cl input,
+.fa-col-sev input { text-align: center; font-weight: 700; }
+.btn-ai-mini {
+  border: 1px solid var(--g2);
+  background: var(--white);
   color: var(--g2);
+  border-radius: 6px;
+  padding: 5px 7px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-ai-mini:hover:not(:disabled) {
+  background: var(--g2);
+  color: var(--white);
+}
+.btn-ai-mini:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.sse-req-count {
+  display: inline-block;
+  margin-left: 6px;
+  background: var(--blue-soft);
+  color: var(--blue-dark);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 10px;
 }
 
 /* ---------- Full table toggle ---------- */

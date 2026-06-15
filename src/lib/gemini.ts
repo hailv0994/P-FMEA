@@ -14,8 +14,12 @@ following the AIAG-VDA structure. You convert production-line process steps into
 realistic, shop-floor-relevant PFMEA.
 
 Rules:
-- For EACH process step, identify its function and a measurable requirement, then
-  generate 1-3 realistic failure modes.
+- For EACH process step, identify its function, then list 2-5 measurable REQUIREMENT
+  items for that step.
+- For EACH requirement item, create EXACTLY ONE failure mode that is the direct
+  NEGATION of that requirement (e.g. requirement "Weld strength meets drawing" →
+  failure mode "Weld strength does not meet drawing"). The number of failure modes
+  MUST equal the number of requirement items.
 - Failure modes must be concrete factory scenarios (e.g. "Insufficient weld strength",
   "Missing component", "Part loaded in wrong orientation"), NOT vague textbook phrases.
 - For each failure mode provide: effect on customer/process, a realistic root cause,
@@ -139,12 +143,44 @@ export async function generateWithGemini({
     "Production line process steps (in order):",
     ...steps.map((s, i) => `${i + 1}. ${s}`),
     "",
-    "Produce the PFMEA rows for these steps.",
+    "For each step, list multiple requirement items and produce ONE failure mode",
+    "row per requirement (the failure mode = negation of the requirement).",
   ]
     .filter(Boolean)
     .join("\n");
 
   return callGemini(SYSTEM_PROMPT, userPrompt);
+}
+
+/**
+ * Phân tích MỘT hạng mục yêu cầu: trả về đúng một dạng hỏng hóc (phủ định của
+ * yêu cầu) kèm ảnh hưởng, nguyên nhân, kiểm soát, S/O/D và biện pháp. Dùng cho
+ * nút "✨ AI" trên từng dòng ở bước Phân tích hỏng hóc.
+ */
+export async function analyzeRequirement(args: {
+  processStep: string;
+  fn: string;
+  requirement: string;
+  meta: ProjectMeta;
+}): Promise<GeneratedRow> {
+  if (!hasGeminiKey()) throw new Error("No Gemini API key configured");
+
+  const userPrompt = [
+    args.meta.projectName ? `Project: ${args.meta.projectName}` : "",
+    `Process step: ${args.processStep}`,
+    args.fn ? `Function: ${args.fn}` : "",
+    `Requirement: ${args.requirement}`,
+    "",
+    "Create EXACTLY ONE failure mode that is the direct NEGATION of the requirement",
+    "above, with effect, root cause, prevention & detection controls, S/O/D ratings,",
+    "a classification symbol when relevant and a recommended action.",
+    "Return a single row whose processStep, function and requirement match the inputs.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const rows = await callGemini(SYSTEM_PROMPT, userPrompt);
+  return rows[0];
 }
 
 /**

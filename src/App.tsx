@@ -9,7 +9,8 @@ import { ResultsView } from "./components/ResultsView";
 import { StepStructureEditor } from "./components/StepStructureEditor";
 import type { PfmeaRow, ProjectMeta, WizardStep } from "./types";
 import { STEP_LABELS } from "./types";
-import { generatePfmea, suggestForStep } from "./lib/generate";
+import { generatePfmea, suggestRow } from "./lib/generate";
+import { negateRequirement } from "./lib/fallbackGenerator";
 import { hasGeminiKey } from "./lib/gemini";
 import { makeId } from "./lib/rpn";
 import { downloadCsv } from "./lib/csv";
@@ -51,7 +52,7 @@ export default function App() {
   const [activeStep, setActiveStep] = useState<WizardStep>(1);
   const [completed, setCompleted] = useState<Set<WizardStep>>(new Set());
   const [view, setView] = useState<"editor" | "results" | "admin">("editor");
-  const [suggestingKey, setSuggestingKey] = useState<string | null>(null);
+  const [busy, setBusy] = useState<Set<string>>(new Set());
   const [inputOpen, setInputOpen] = useState(true);
   const [showFullTable, setShowFullTable] = useState(false);
 
@@ -161,34 +162,65 @@ export default function App() {
     return order.map((k) => map.get(k)!);
   }, [rows]);
 
-  const addFailureModeToGroup = (group: StepGroup) => {
-    const last = group.rows[group.rows.length - 1];
-    const blank = blankRow(group.processStep, group.function, group.requirement);
-    if (last) insertAfter(last.id, blank);
-    else setRows((prev) => [...prev, blank]);
-  };
+  const addBusy = (k: string) => setBusy((prev) => new Set(prev).add(k));
+  const removeBusy = (k: string) =>
+    setBusy((prev) => {
+      const n = new Set(prev);
+      n.delete(k);
+      return n;
+    });
 
-  const aiSuggest = async (group: StepGroup) => {
-    setSuggestingKey(group.key);
+  // AI gợi ý cho MỘT dòng (một hạng mục yêu cầu).
+  const aiSuggestRow = async (row: PfmeaRow, group: StepGroup) => {
+    if (!row.requirement.trim()) {
+      setNote("Hãy nhập hạng mục yêu cầu cho dòng này trước khi gợi ý.");
+      return;
+    }
+    addBusy(row.id);
     setNote(null);
     try {
-      const existing = group.rows.map((r) => r.failureMode).filter(Boolean);
-      const result = await suggestForStep({
-        processStep: group.processStep, fn: group.function,
-        requirement: group.requirement, existing, meta,
+      const result = await suggestRow({
+        processStep: group.processStep,
+        fn: group.function,
+        requirement: row.requirement,
+        meta,
       });
-      const last = group.rows[group.rows.length - 1];
-      setRows((prev) => {
-        if (!last) return [...prev, ...result.rows];
-        const idx = prev.findIndex((r) => r.id === last.id);
-        if (idx === -1) return [...prev, ...result.rows];
-        return [...prev.slice(0, idx + 1), ...result.rows, ...prev.slice(idx + 1)];
-      });
+      updateRow(row.id, result.patch);
       if (result.note) setNote(result.note);
     } catch (err) {
       setNote(`AI gợi ý thất bại: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
-      setSuggestingKey(null);
+      removeBusy(row.id);
+    }
+  };
+
+  // AI gợi ý cho cả công đoạn (chạy lần lượt từng dòng có yêu cầu).
+  const aiSuggestGroup = async (group: StepGroup) => {
+    const targets = group.rows.filter((r) => r.requirement.trim());
+    if (targets.length === 0) {
+      setNote("Công đoạn này chưa có hạng mục yêu cầu nào để gợi ý.");
+      return;
+    }
+    addBusy(group.key);
+    setNote(null);
+    try {
+      const results = await Promise.all(
+        targets.map((r) =>
+          suggestRow({
+            processStep: group.processStep,
+            fn: group.function,
+            requirement: r.requirement,
+            meta,
+          }),
+        ),
+      );
+      results.forEach((res, i) => updateRow(targets[i].id, res.patch));
+      const noted = results.find((r) => r.note);
+      if (noted?.note) setNote(noted.note);
+    } catch (err) {
+      setNote(`AI gợi ý thất bại: ${err instanceof Error ? err.message : String(err)}`);
+    } finally {
+      removeBusy(group.key);
     }
   };
 
@@ -311,10 +343,10 @@ export default function App() {
                   <FailureAnalysisCards
                     groups={groups}
                     onUpdateRow={updateRow}
-                    onDeleteRow={deleteRow}
-                    onAddFailureMode={addFailureModeToGroup}
-                    onAiSuggest={aiSuggest}
-                    suggestingKey={suggestingKey}
+                    onAiSuggestRow={aiSuggestRow}
+                    onAiSuggestGroup={aiSuggestGroup}
+                    busy={busy}
+                    negate={negateRequirement}
                   />
                 ) : (
                   <PfmeaTable

@@ -1,18 +1,12 @@
 import { useMemo } from "react";
 import type { PfmeaRow } from "../types";
 
-interface ReqEntry {
-  text: string;
-  rowIds: string[];
-}
-
 interface StepGroup {
   key: string;
   processStep: string;
   fn: string;
   allRowIds: string[];
-  requirements: ReqEntry[];
-  lastRowId: string;
+  rows: PfmeaRow[];
 }
 
 interface Props {
@@ -30,15 +24,12 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
     rows.forEach((r) => {
       const key = r.processStep.trim().toLowerCase() || `__${r.id}`;
       if (!map.has(key)) {
-        map.set(key, { key, processStep: r.processStep, fn: r.function, allRowIds: [], requirements: [], lastRowId: r.id });
+        map.set(key, { key, processStep: r.processStep, fn: r.function, allRowIds: [], rows: [] });
         order.push(key);
       }
       const g = map.get(key)!;
       g.allRowIds.push(r.id);
-      g.lastRowId = r.id;
-      const existing = g.requirements.find((rq) => rq.text === r.requirement);
-      if (existing) existing.rowIds.push(r.id);
-      else g.requirements.push({ text: r.requirement, rowIds: [r.id] });
+      g.rows.push(r);
     });
 
     return order.map((k) => map.get(k)!);
@@ -49,12 +40,6 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
 
   const updateFn = (g: StepGroup, val: string) =>
     g.allRowIds.forEach((id) => onUpdateRow(id, { function: val }));
-
-  const updateReqText = (req: ReqEntry, val: string) =>
-    req.rowIds.forEach((id) => onUpdateRow(id, { requirement: val }));
-
-  const deleteReq = (req: ReqEntry) =>
-    req.rowIds.forEach((id) => onDeleteRow(id));
 
   return (
     <div className="sse-list">
@@ -82,34 +67,46 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
             </div>
 
             <div className="sse-req-section">
-              <label className="sse-label">Yêu cầu</label>
+              <label className="sse-label">
+                Yêu cầu
+                <span className="sse-req-count">{g.rows.length}</span>
+              </label>
               <div className="sse-req-list">
-                {g.requirements.map((req, ri) => (
-                  <div className="sse-req-row" key={ri}>
-                    <span className="sse-req-bullet">·</span>
+                {g.rows.map((r, ri) => (
+                  <div className="sse-req-row" key={r.id}>
+                    <span className="sse-req-bullet">{ri + 1}</span>
                     <input
                       className="sse-input"
-                      value={req.text}
-                      placeholder="Yêu cầu kỹ thuật / chất lượng"
-                      onChange={(e) => updateReqText(req, e.target.value)}
+                      value={r.requirement}
+                      placeholder="Hạng mục yêu cầu (→ 1 dạng hỏng hóc)"
+                      onChange={(e) => onUpdateRow(r.id, { requirement: e.target.value })}
                     />
                     <button
                       className="icon-btn danger"
                       type="button"
                       title="Xóa yêu cầu này"
-                      onClick={() => deleteReq(req)}
+                      onClick={() => onDeleteRow(r.id)}
                     >
                       ×
                     </button>
                   </div>
                 ))}
-                {g.requirements.length === 0 && (
-                  <p className="muted" style={{ margin: "4px 0", fontSize: "13px" }}>Chưa có yêu cầu nào.</p>
+                {g.rows.length === 0 && (
+                  <p className="muted" style={{ margin: "4px 0", fontSize: "13px" }}>
+                    Chưa có yêu cầu nào.
+                  </p>
                 )}
                 <button
                   className="btn-secondary sse-add-req"
                   type="button"
-                  onClick={() => onAddRequirementRow(g.lastRowId, g.processStep, g.fn, "")}
+                  onClick={() =>
+                    onAddRequirementRow(
+                      g.allRowIds[g.allRowIds.length - 1] ?? "",
+                      g.processStep,
+                      g.fn,
+                      "",
+                    )
+                  }
                 >
                   + Thêm yêu cầu
                 </button>
@@ -118,9 +115,7 @@ export function StepStructureEditor({ rows, onUpdateRow, onDeleteRow, onAddRequi
           </div>
         </div>
       ))}
-      {groups.length === 0 && (
-        <p className="muted">Chưa có công đoạn nào.</p>
-      )}
+      {groups.length === 0 && <p className="muted">Chưa có công đoạn nào.</p>}
     </div>
   );
 }
