@@ -1,5 +1,5 @@
 import type { PfmeaRow } from "../types";
-import { SEVERITY_RULES } from "../lib/severityRules";
+import { SEVERITY_RULES_PRODUCT, SEVERITY_RULES_PROCESS } from "../lib/severityRules";
 
 export interface StepGroup {
   key: string;
@@ -56,9 +56,13 @@ export function FailureAnalysisCards({
     );
   }
 
-  /** Ghép câu tiêu chuẩn nghiêm trọng vào ô Ảnh hưởng + chấm điểm Mức NT theo rank. */
-  const applySeverityRule = (fmId: string, current: string, rank: number) => {
-    const rule = SEVERITY_RULES.find((r) => r.rank === rank);
+  /** Ghép câu tiêu chuẩn nghiêm trọng vào ô Ảnh hưởng + chấm điểm (S) theo rank.
+   *  val có dạng "product:9" hoặc "process:7". */
+  const applySeverityRule = (fmId: string, current: string, val: string) => {
+    const [scope, rankStr] = val.split(":");
+    const rank = Number(rankStr);
+    const pool = scope === "process" ? SEVERITY_RULES_PROCESS : SEVERITY_RULES_PRODUCT;
+    const rule = pool.find((r) => r.rank === rank);
     if (!rule) return;
     const base = current.trim();
     const already = base.includes(rule.text);
@@ -180,17 +184,26 @@ export function FailureAnalysisCards({
                                     value=""
                                     title="Ghép câu tiêu chuẩn mức độ nghiêm trọng (chấm điểm theo rank)"
                                     onChange={(e) => {
-                                      const rank = Number(e.target.value);
-                                      if (rank) applySeverityRule(head.fmId, head.effect, rank);
+                                      if (e.target.value)
+                                        applySeverityRule(head.fmId, head.effect, e.target.value);
                                       e.target.value = "";
                                     }}
                                   >
                                     <option value="">+ Ghép tiêu chí nghiêm trọng…</option>
-                                    {SEVERITY_RULES.map((rule) => (
-                                      <option key={rule.rank} value={rule.rank}>
-                                        [{rule.rank}] {rule.category} — {rule.text}
-                                      </option>
-                                    ))}
+                                    <optgroup label="Ảnh hưởng đến SẢN PHẨM (khách hàng)">
+                                      {SEVERITY_RULES_PRODUCT.map((rule) => (
+                                        <option key={`p-${rule.rank}`} value={`product:${rule.rank}`}>
+                                          [{rule.rank}] {rule.category} — {rule.text}
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                    <optgroup label="Ảnh hưởng đến CÔNG ĐOẠN (chế tạo/lắp ráp)">
+                                      {SEVERITY_RULES_PROCESS.map((rule) => (
+                                        <option key={`q-${rule.rank}`} value={`process:${rule.rank}`}>
+                                          [{rule.rank}] {rule.category} — {rule.text}
+                                        </option>
+                                      ))}
+                                    </optgroup>
                                   </select>
                                 </div>
                               </td>
