@@ -62,7 +62,7 @@ export function FailureAnalysisCards({
     if (!rule) return;
     const base = current.trim();
     const already = base.includes(rule.text);
-    const effect = already ? base : base ? `${base}\n→ ${rule.text}` : rule.text;
+    const effect = already ? base : base ? `${base} =>${rule.text}` : rule.text;
     onUpdateFmGroup(fmId, { effect, severity: rank });
   };
 
@@ -167,31 +167,32 @@ export function FailureAnalysisCards({
                                 />
                               </td>
                               <td className="fa-col-ef" rowSpan={span}>
-                                <textarea
-                                  rows={2}
-                                  value={head.effect}
-                                  placeholder="Ảnh hưởng tới khách hàng / quá trình"
-                                  onChange={(e) =>
-                                    onUpdateFmGroup(head.fmId, { effect: e.target.value })
-                                  }
-                                />
-                                <select
-                                  className="fa-sev-rule"
-                                  value=""
-                                  title="Ghép câu tiêu chuẩn mức độ nghiêm trọng (chấm điểm theo rank)"
-                                  onChange={(e) => {
-                                    const rank = Number(e.target.value);
-                                    if (rank) applySeverityRule(head.fmId, head.effect, rank);
-                                    e.target.value = "";
-                                  }}
-                                >
-                                  <option value="">+ Ghép tiêu chí nghiêm trọng…</option>
-                                  {SEVERITY_RULES.map((rule) => (
-                                    <option key={rule.rank} value={rule.rank}>
-                                      [{rule.rank}] {rule.category} — {rule.text}
-                                    </option>
-                                  ))}
-                                </select>
+                                <div className="fa-ef-cell">
+                                  <textarea
+                                    value={head.effect}
+                                    placeholder="Ảnh hưởng tới khách hàng / quá trình"
+                                    onChange={(e) =>
+                                      onUpdateFmGroup(head.fmId, { effect: e.target.value })
+                                    }
+                                  />
+                                  <select
+                                    className="fa-sev-rule"
+                                    value=""
+                                    title="Ghép câu tiêu chuẩn mức độ nghiêm trọng (chấm điểm theo rank)"
+                                    onChange={(e) => {
+                                      const rank = Number(e.target.value);
+                                      if (rank) applySeverityRule(head.fmId, head.effect, rank);
+                                      e.target.value = "";
+                                    }}
+                                  >
+                                    <option value="">+ Ghép tiêu chí nghiêm trọng…</option>
+                                    {SEVERITY_RULES.map((rule) => (
+                                      <option key={rule.rank} value={rule.rank}>
+                                        [{rule.rank}] {rule.category} — {rule.text}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
                               </td>
                               <td className="fa-col-sev" rowSpan={span}>
                                 <input

@@ -903,7 +903,28 @@ button:disabled,
 .fa-col-req textarea { background: #f8fafc; color: var(--muted); }
 .fa-col-cl input,
 .fa-col-sev input { text-align: center; font-weight: 700; }
-.fa-table td { vertical-align: top; }
+
+/* height:1px là "thủ thuật" để con bên trong dùng height:100% nở đúng chiều cao
+   thực tế của ô gộp (rowSpan) — nhờ đó ô Yêu cầu / Dạng hỏng hóc / Ảnh hưởng tự
+   giãn theo số ô Nguyên nhân. */
+.fa-table td { vertical-align: top; height: 1px; }
+.fa-col-req textarea,
+.fa-col-fm textarea {
+  height: 100%;
+  min-height: 56px;
+  resize: none;
+}
+.fa-ef-cell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 56px;
+}
+.fa-ef-cell textarea {
+  flex: 1 1 auto;
+  resize: none;
+}
+.fa-ef-cell .fa-sev-rule { flex: 0 0 auto; }
 
 /* Dropdown ghép câu tiêu chuẩn mức độ nghiêm trọng vào ô Ảnh hưởng */
 .fa-sev-rule {

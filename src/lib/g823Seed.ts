@@ -1,4 +1,5 @@
 // AUTO-GENERATED từ file 5_PFMEA_DPC_G823_ver_1.xlsx — seed PFMEA cho model base G823.
+// Ảnh hưởng chỉ chứa mô tả; câu tiêu chí nghiêm trọng (=>) được thêm khi người dùng chọn ở dropdown.
 import type { SeedModel } from "./seedTypes";
 
 export const G823_SEED: SeedModel = {
@@ -11,7 +12,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Kiểm tra chủng loại: đúng chủng loại",
           failureMode: "Sai chủng loại",
-          effect: "Phải thay đổi kế hoạch sản xuất =>Sự bất tiện nhỏ cho công đoạn, thao tác hoặc nhân viên thao tác",
+          effect: "Phải thay đổi kế hoạch sản xuất",
           severity: 2,
           classification: "",
           causes: ["Không kiểm tra mã linh kiện khi nhập"],
@@ -19,7 +20,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Kiểm tra số lượng: đủ số lượng",
           failureMode: "Thiếu số lượng",
-          effect: "Phải nhập thêm số lượng =>Sự bất tiện nhỏ cho công đoạn, thao tác hoặc nhân viên thao tác",
+          effect: "Phải nhập thêm số lượng",
           severity: 2,
           classification: "",
           causes: ["Không kiểm tra số lượng linh kiện khi nhập"],
@@ -33,7 +34,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Kích thước chiều cao tổng, từ mặt dưới cap đến mặt đầu mainpipe & độ xâm nhập hàn đạt theo bản vẽ",
           failureMode: "Kích thước chiều cao tổng không đạt / -Kích thước từ mặt dưới cap đến mặt đầu mainpipe không đạt / -Độ xâm nhập hàn không đạt",
-          effect: "Lệch 2 bên giảm xóc =>Suy giảm chức năng thứ 2 (có thể thao tác xe, tuy nhiên, mức độ tính năng liên quan đến tính thoải mái, tính tiện lợi bị giảm sút)",
+          effect: "Lệch 2 bên giảm xóc",
           severity: 5,
           classification: "",
           causes: ["Cài đặt điện áp hàn không đúng tiêu chuẩn", "Điện áp không đạt do tụ điện bị hỏng", "Hết dầu bôi trơn cho xylanh điện cực", "Áp lực khí vào không đạt", "Xylanh điện cực trên bị kẹt"],
@@ -41,7 +42,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Độ vuông góc đạt theo bản vẽ",
           failureMode: "Độ vuông góc không đạt",
-          effect: "Giảm xóc bị nghiêng =>Suy giảm chức năng thứ 2 (có thể thao tác xe, tuy nhiên, mức độ tính năng liên quan đến tính thoải mái, tính tiện lợi bị giảm sút)",
+          effect: "Giảm xóc bị nghiêng",
           severity: 5,
           classification: "",
           causes: ["Điện cực, đồ gá hàn bị va đập, nứt vỡ, rơ lỏng", "Điện cực bị mòn", "Xylanh điện cực dưới bị kẹt"],
@@ -49,7 +50,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Đường kính vùng trượt đạt theo bản vẽ",
           failureMode: "Đường kính vùng trượt không đạt",
-          effect: "Giảm xóc bị kẹt =>Làm mất chức năng thứ 2 (có thể thao tác xe, tuy nhiên, chức năng liên quan đến tính thoải mái, tính tiện lợi không hoạt động)",
+          effect: "Giảm xóc bị kẹt",
           severity: 6,
           classification: "",
           causes: ["Nhân viên lắp điện cực dưới bị lệch tâm, kẹp vào mainpipe bị lệch gây móp méo mainpipe"],
@@ -57,7 +58,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Độ bền kéo (độ bền mối hàn) đạt theo bản vẽ",
           failureMode: "Độ bền mối hàn không đạt",
-          effect: "Mối hàn bị bung→tuột cụm giảm xóc =>Dạng hỏng hóc mang tính tiềm ẩn gây ảnh hưởng đến thao tác an toàn của xe",
+          effect: "Mối hàn bị bung→tuột cụm giảm xóc",
           severity: 9,
           classification: "S",
           causes: ["Cài đặt điện áp hàn không đúng tiêu chuẩn", "Điện áp không đạt do tụ điện bị hỏng", "Cài đặt gia áp điện cực không đúng tiêu chuẩn", "Chỉnh độ nhô của mainpipe chưa đúng", "Điện cực bị mòn", "Để lẫn sản phẩm NG vào sản phẩm OK"],
@@ -65,7 +66,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Mối hàn không bị vỡ trong kiểm tra phá hủy",
           failureMode: "Mối hàn bị vỡ khi kiểm tra phá hủy",
-          effect: "Nguy cơ gãy mối hàn=>Mất chức năng chính (không thể thao tác xe được, không ảnh hưởng đến thao tác an toàn của xe)",
+          effect: "Nguy cơ gãy mối hàn",
           severity: 8,
           classification: "",
           causes: ["Biến động trong quá trình hàn"],
@@ -73,7 +74,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Mối hàn được hàn tròn kín xung quanh, có vết chảy vật liệu, không nứt/cháy thủng/bavia",
           failureMode: "Mối hàn không được hàn kín xung quanh, không có vết chảy vật liệu, có vết nứt, cháy thủng và bavia",
-          effect: "Chảy dầu=>Làm mất chức năng thứ 2 (có thể thao tác xe, tuy nhiên, chức năng liên quan đến tính thoải mái, tính tiện lợi không hoạt động)",
+          effect: "Chảy dầu",
           severity: 7,
           classification: "",
           causes: ["Biến động trong quá trình hàn"],
@@ -95,7 +96,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Kích thước chiều cao tổng, từ tâm Joint metal đến mặt trên Damper cap & độ xâm nhập hàn đạt theo bản vẽ",
           failureMode: "Kích thước chiều cao tổng không đạt / -Kích thước từ tâm Joint metal đến mặt trên Damper ca không đạt / -Độ xâm nhập hàn không đạt",
-          effect: "Lệch 2 bên giảm xóc =>Suy giảm chức năng thứ 2 (có thể thao tác xe, tuy nhiên, mức độ tính năng liên quan đến tính thoải mái, tính tiện lợi bị giảm sút)",
+          effect: "Lệch 2 bên giảm xóc",
           severity: 5,
           classification: "",
           causes: ["Biến động trong quá trình hàn", "Đồ gá bị mòn", "Xylanh điện cực trên bị kẹt", "Hết dầu bôi trơn cho xylanh điện cực", "Áp lực khí vào không đạt", "Để lẫn hàng NG vào hàng OK"],
@@ -103,7 +104,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Độ đối xứng X, Y đạt theo bản vẽ",
           failureMode: "Độ đối xứng X, Y không đạt",
-          effect: "Giảm xóc bị lệch =>Suy giảm chức năng thứ 2 (có thể thao tác xe, tuy nhiên, mức độ tính năng liên quan đến tính thoải mái, tính tiện lợi bị giảm sút)",
+          effect: "Giảm xóc bị lệch",
           severity: 5,
           classification: "",
           causes: ["Biến động trong quá trình hàn", "Điện cực, đồ gá rơ lỏng"],
@@ -111,7 +112,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Đường kính vùng trượt đạt theo bản vẽ",
           failureMode: "Đường kính vùng trượt không đạt",
-          effect: "Giảm xóc bị kẹt =>Làm mất chức năng thứ 2 (có thể thao tác xe, tuy nhiên, chức năng liên quan đến tính thoải mái, tính tiện lợi không hoạt động)",
+          effect: "Giảm xóc bị kẹt",
           severity: 6,
           classification: "",
           causes: ["Biến động trong quá trình hàn", "Xylanh điện cực dưới bị kẹt"],
@@ -119,7 +120,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Độ bền kéo (độ bền mối hàn) đạt theo bản vẽ",
           failureMode: "Độ bền mối hàn không đạt",
-          effect: "Mối hàn bị bung→tuột cụm giảm xóc =>Dạng hỏng hóc mang tính tiềm ẩn gây ảnh hưởng đến thao tác an toàn của xe",
+          effect: "Mối hàn bị bung→tuột cụm giảm xóc",
           severity: 9,
           classification: "S",
           causes: ["Biến động trong quá trình hàn", "Cài đặt sai dòng điện hàn, thời gian hàn, độ nhún", "Cài đặt sai gia áp điện cực", "Chỉnh độ nhô của mainpipe chưa đúng", "Điện cực bị mòn"],
@@ -127,7 +128,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Mối hàn không bị vỡ trong kiểm tra phá hủy",
           failureMode: "Mối hàn bị vỡ khi kiểm tra phá hủy",
-          effect: "Nguy cơ gãy mối hàn=>Mất chức năng chính (không thể thao tác xe được, không ảnh hưởng đến thao tác an toàn của xe)",
+          effect: "Nguy cơ gãy mối hàn",
           severity: 8,
           classification: "",
           causes: ["Biến động trong quá trình hàn"],
@@ -149,7 +150,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Đầy đủ 2 dấu",
           failureMode: "Thiếu dấu",
-          effect: "Không biết được ngày tháng năm sản xuất =>Không có ảnh hưởng mà có thể nhận thấy được",
+          effect: "Không biết được ngày tháng năm sản xuất",
           severity: 1,
           classification: "",
           causes: ["Gá thiếu con dấu"],
@@ -157,7 +158,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Dấu rõ nét",
           failureMode: "Dấu không rõ nét",
-          effect: "Không biết được ngày tháng năm sản xuất =>Không có ảnh hưởng mà có thể nhận thấy được",
+          effect: "Không biết được ngày tháng năm sản xuất",
           severity: 1,
           classification: "",
           causes: ["Áp lực khí nguồn và áp lực đóng dấu không đạt"],
@@ -171,7 +172,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Độ bền kéo đạt theo bản vẽ; chất lượng mối hàn theo SPEC 20209-AAY-0-00",
           failureMode: "Độ bền mối hàn không đạt / (Mối hàn bị phá hủy khi kiểm tra độ bền) / Các hạng mục chất lượng mối hàn khác không đạt theo SPEC: 20209-AAY-0 -00",
-          effect: "Nghiêng joint metal =>Mất chức năng chính (không thể thao tác xe được, không ảnh hưởng đến thao tác an toàn của xe)",
+          effect: "Nghiêng joint metal",
           severity: 8,
           classification: "S",
           causes: ["Cài đặt, điều chỉnh điều kiện hàn chưa đúng: / -Dòng điện, Điện áp, Lưu lượng khí C02, Góc tay hàn, Lượng nhô của dây hàn", "Cài đặt tốc độ hàn, thời gian hàn chưa đúng", "SPEC dây hàn chưa đúng", "Khí CO2 có tỉ lệ không đúng", "Tắc bép hàn (lượng khí ít)", "Bép hàn bị mòn"],
@@ -179,7 +180,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Chiều dài mối hàn đạt theo bản vẽ",
           failureMode: "Chiều dài mối hàn không đạt",
-          effect: "Độ bền mối hàn thấp, cụm giảm xóc bị yếu =>Mất chức năng chính (không thể thao tác xe được, không ảnh hưởng đến thao tác an toàn của xe)",
+          effect: "Độ bền mối hàn thấp, cụm giảm xóc bị yếu",
           severity: 8,
           classification: "",
           causes: ["Cài đặt tốc độ hàn, thời gian hàn chưa đúng", "Cài đặt, điều chỉnh điều kiện hàn chưa đúng: / -Dòng điện, Điện áp, Lưu lượng khí C02, Góc tay hàn, Lượng nhô của dây hàn"],
@@ -187,7 +188,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Linh kiện phải được hàn gia cường",
           failureMode: "Linh kiện chưa được hàn gia cường",
-          effect: "Nghiêng joint metal, cụm giảm xóc bị kẹt =>Mất chức năng chính (không thể thao tác xe được, không ảnh hưởng đến thao tác an toàn của xe)",
+          effect: "Nghiêng joint metal, cụm giảm xóc bị kẹt",
           severity: 8,
           classification: "",
           causes: ["Bỏ lọt công đoạn hàn gia cường"],
@@ -201,7 +202,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Kiểm tra dò rỉ khí: không dò rỉ khí tại áp suất 490 kPa",
           failureMode: "Bỏ lọt sản phẩm bị dò rỉ khí tại áp suất 490 kPa",
-          effect: "Nguy cơ dò rỉ dầu =>Làm giảm chức năng chính (có thể thao tác xe, tuy nhiên, mức độ tính năng suy giảm)",
+          effect: "Nguy cơ dò rỉ dầu",
           severity: 7,
           classification: "",
           causes: ["Áp lực khí nguồn, khí thổi, khí kẹp không đạt", "Thời gian dò khí quá ít", "Mức nước không ngập sản phẩm", "Đầu thổi khí bị tắc", "Đồ gá, đầu bịt bị nứt, vỡ, biến dạng, rơ lỏng"],
@@ -209,7 +210,7 @@ export const G823_SEED: SeedModel = {
         {
           requirement: "Bề mặt mối hàn được hàn tròn kín xung quanh, có vết chảy vật liệu, không nứt/cháy thủng/bavia",
           failureMode: "Sản phẩm không được hàn tròn kín xung quanh, không có vết chảy vật liệu, có vết nứt, vết cháy thủng và bavia",
-          effect: "Nguy cơ dò rỉ dầu =>Làm giảm chức năng chính (có thể thao tác xe, tuy nhiên, mức độ tính năng suy giảm)",
+          effect: "Nguy cơ dò rỉ dầu",
           severity: 7,
           classification: "",
           causes: ["Sản phẩm NG từ công đoạn trước bị lưu suất"],
