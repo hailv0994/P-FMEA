@@ -8,6 +8,10 @@
 export interface CatStep {
   id: string;
   name: string;
+  /** Chức năng của công đoạn (tùy chọn — lưu để dùng lại). */
+  fn?: string;
+  /** Các hạng mục yêu cầu của công đoạn (mỗi yêu cầu → 1 dạng hỏng hóc). */
+  requirements?: string[];
 }
 export interface ModelBase {
   id: string;

@@ -10,9 +10,13 @@ import { StepStructureEditor } from "./components/StepStructureEditor";
 import type { PfmeaRow, ProjectMeta, WizardStep } from "./types";
 import { STEP_LABELS } from "./types";
 import { generatePfmea, suggestRow } from "./lib/generate";
-import { negateRequirement } from "./lib/fallbackGenerator";
+import {
+  negateRequirement,
+  analyzeRequirementFallback,
+  generateFallback,
+} from "./lib/fallbackGenerator";
 import { hasGeminiKey } from "./lib/gemini";
-import { makeId } from "./lib/rpn";
+import { makeId, toPfmeaRow } from "./lib/rpn";
 import { downloadCsv } from "./lib/csv";
 import { exportToTemplate } from "./lib/excelExport";
 import { ALL_COLUMNS, STEP_COLUMNS } from "./lib/columns";
@@ -22,6 +26,7 @@ import {
   loadCatalog,
   saveCatalog,
   clone,
+  uid,
 } from "./lib/catalog";
 
 const EMPTY_META: ProjectMeta = { projectName: "", scope: "", fmeaLead: "", teamMembers: "" };
@@ -101,7 +106,47 @@ export default function App() {
   };
 
   // ----- generation -----
+  const stepsHaveSavedReqs = (steps: CatStep[]) =>
+    steps.some((s) => (s.requirements ?? []).some((r) => r.trim() !== ""));
+
+  /** Dựng PFMEA trực tiếp từ cấu trúc đã lưu (chức năng + yêu cầu) trong danh mục. */
+  const buildRowsFromCatalogSteps = (steps: CatStep[]): PfmeaRow[] => {
+    const out: PfmeaRow[] = [];
+    for (const st of steps) {
+      const name = st.name.trim();
+      if (!name) continue;
+      const reqs = (st.requirements ?? []).filter((r) => r.trim() !== "");
+      if (reqs.length) {
+        const fn = st.fn ?? "";
+        for (const req of reqs) {
+          out.push(toPfmeaRow(analyzeRequirementFallback({ processStep: name, fn, requirement: req })));
+        }
+      } else {
+        // Công đoạn chưa lưu yêu cầu → dùng bộ máy ngoại tuyến gợi ý cho riêng nó.
+        generateFallback([name]).forEach((g) => out.push(toPfmeaRow(g)));
+      }
+    }
+    return out;
+  };
+
   const handleGenerate = async () => {
+    // Nếu danh mục đã lưu sẵn chức năng + yêu cầu → dựng thẳng từ đó (không sinh lại).
+    if (stepsHaveSavedReqs(workSteps)) {
+      const built = buildRowsFromCatalogSteps(workSteps);
+      setRows(built);
+      if (built.length > 0) {
+        setNote(
+          "Đã dựng PFMEA từ cấu trúc đã lưu trong danh mục. Dùng ✨ AI ở bước 2 để hoàn thiện phân tích.",
+        );
+        setInputOpen(false);
+        setActiveStep(1);
+        setView("editor");
+      } else {
+        setNote("Không có công đoạn nào để dựng.");
+      }
+      return;
+    }
+
     const lineText = workSteps.map((s) => s.name).filter(Boolean).join("\n");
     setLoading(true);
     setNote(null);
@@ -119,6 +164,48 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  /** Lưu chức năng + yêu cầu hiện tại (bước 1) vào danh mục để dùng lại lâu dài. */
+  const saveStructureToCatalog = () => {
+    if (!sel.modelBaseId) {
+      setNote("Chưa chọn Model base nên không thể lưu cấu trúc vào danh mục.");
+      return;
+    }
+    const next = clone(catalog);
+    const mb = next.groups
+      .find((g) => g.id === sel.groupId)
+      ?.products.find((p) => p.id === sel.productId)
+      ?.lines.find((l) => l.id === sel.lineId)
+      ?.modelBases.find((m) => m.id === sel.modelBaseId);
+    if (!mb) {
+      setNote("Không tìm thấy Model base trong danh mục.");
+      return;
+    }
+
+    // Gom các dòng theo công đoạn (giữ thứ tự) để ghi lại chức năng + yêu cầu.
+    const map = new Map<string, { name: string; fn: string; reqs: string[] }>();
+    const order: string[] = [];
+    rows.forEach((r) => {
+      const key = r.processStep.trim().toLowerCase() || `__${r.id}`;
+      if (!map.has(key)) {
+        map.set(key, { name: r.processStep, fn: r.function, reqs: [] });
+        order.push(key);
+      }
+      map.get(key)!.reqs.push(r.requirement);
+    });
+
+    mb.steps = order.map((k) => {
+      const g = map.get(k)!;
+      return { id: uid("st"), name: g.name, fn: g.fn, requirements: g.reqs };
+    });
+
+    setCatalog(next);
+    saveCatalog(next);
+    setWorkSteps(clone(mb.steps));
+    setNote(
+      "✅ Đã lưu cấu trúc (chức năng + yêu cầu) vào danh mục — dữ liệu sẽ còn khi tải lại trang. Nên vào Quản trị danh mục → Xuất JSON để sao lưu/chia sẻ.",
+    );
   };
 
   // ----- row editing -----
@@ -321,7 +408,10 @@ export default function App() {
                   <h2 className="panel-title">{activeStep}. {STEP_LABELS[activeStep]}</h2>
                   <div className="wizard-actions">
                     {activeStep === 1 && (
-                      <button className="btn-secondary" type="button" onClick={addStep}>+ Thêm công đoạn</button>
+                      <>
+                        <button className="btn-secondary" type="button" onClick={addStep}>+ Thêm công đoạn</button>
+                        <button className="btn-secondary" type="button" onClick={saveStructureToCatalog} title="Lưu chức năng + yêu cầu vào danh mục để dùng lại lâu dài">💾 Lưu vào danh mục</button>
+                      </>
                     )}
                     <button className="btn-secondary" type="button" onClick={prev} disabled={activeStep === 1}>Quay lại</button>
                     <button className="btn-primary" type="button" onClick={next}>
