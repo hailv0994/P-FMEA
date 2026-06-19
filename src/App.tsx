@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Header } from "./components/Header";
 import { SetupPanel, type Selection } from "./components/SetupPanel";
 import { CatalogAdmin } from "./components/CatalogAdmin";
@@ -7,8 +7,10 @@ import { Stepper } from "./components/Stepper";
 import { FailureAnalysisCards, type StepGroup } from "./components/FailureAnalysisCards";
 import { ResultsView } from "./components/ResultsView";
 import { StepStructureEditor } from "./components/StepStructureEditor";
+import { CpImportModal, type StepMapping } from "./components/CpImportModal";
 import type { PfmeaRow, ProjectMeta, WizardStep } from "./types";
 import { STEP_LABELS } from "./types";
+import { parseCpXlsx, type CpData } from "./lib/cpParser";
 import { generatePfmea, suggestRow } from "./lib/generate";
 import {
   negateRequirement,
@@ -39,7 +41,7 @@ function blankRow(processStep = "", fn = "", requirement = "", fmId = makeId()):
     id: makeId(),
     fmId,
     processStep, function: fn, requirement,
-    failureMode: "", effect: "", cause: "",
+    failureMode: "", effect: "", cause: "", detectCause: "",
     severity: 1, classification: "", occurrence: 1,
     controlPrevention: "", controlDetection: "", detection: 1, rpn: 1,
     recommendedAction: "", responsible: "", targetDate: "", actionTaken: "",
@@ -63,6 +65,8 @@ export default function App() {
   const [busy, setBusy] = useState<Set<string>>(new Set());
   const [inputOpen, setInputOpen] = useState(true);
   const [showFullTable, setShowFullTable] = useState(false);
+  const [cpImportData, setCpImportData] = useState<CpData | null>(null);
+  const cpInputRef = useRef<HTMLInputElement>(null);
 
   const usingGemini = useMemo(() => hasGeminiKey(), []);
 
@@ -182,6 +186,83 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // ----- CP/IS import -----
+  const handleCpFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    try {
+      const buffer = await file.arrayBuffer();
+      const data = await parseCpXlsx(buffer);
+      if (data.sheets.length === 0) {
+        setNote("Không tìm thấy dữ liệu hạng mục trong file CP/IS. Kiểm tra lại cấu trúc file.");
+        return;
+      }
+      setCpImportData(data);
+    } catch (err) {
+      setNote(`Lỗi đọc file CP/IS: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
+  const handleCpImportConfirm = (mappings: StepMapping[]) => {
+    setCpImportData(null);
+    // Gom: stepName → CpItem[]
+    const stepItemsMap = new Map<string, typeof mappings[0]["items"]>();
+    for (const m of mappings) {
+      for (const stepName of m.targetSteps) {
+        const cur = stepItemsMap.get(stepName) ?? [];
+        stepItemsMap.set(stepName, [...cur, ...m.items]);
+      }
+    }
+    const targetStepNames = new Set(stepItemsMap.keys());
+
+    // Giữ nguyên các dòng không thuộc công đoạn bị map
+    const kept = rows.filter((r) => !targetStepNames.has(r.processStep.trim()));
+
+    // Dựng dòng mới từ CP items cho mỗi công đoạn
+    const newRows: PfmeaRow[] = [];
+    // Giữ thứ tự công đoạn theo workSteps (hoặc theo rows hiện có)
+    const stepOrder: string[] = [];
+    const seen = new Set<string>();
+    [...rows.map((r) => r.processStep.trim()), ...Array.from(targetStepNames)].forEach((s) => {
+      if (!seen.has(s)) { seen.add(s); stepOrder.push(s); }
+    });
+
+    for (const stepName of stepOrder) {
+      const items = stepItemsMap.get(stepName);
+      if (!items) continue;
+      const existingFn = rows.find((r) => r.processStep.trim() === stepName)?.function ?? "";
+      for (const item of items) {
+        const row = blankRow(stepName, existingFn, item.requirement);
+        row.controlDetection = item.detectionSentence;
+        newRows.push(row);
+      }
+    }
+
+    // Dòng giữ lại sắp xếp trước, dòng mới từ CP cho các step đã map
+    const keptByStep = new Map<string, PfmeaRow[]>();
+    kept.forEach((r) => {
+      const k = r.processStep.trim();
+      if (!keptByStep.has(k)) keptByStep.set(k, []);
+      keptByStep.get(k)!.push(r);
+    });
+
+    const merged: PfmeaRow[] = [];
+    for (const stepName of stepOrder) {
+      if (targetStepNames.has(stepName)) {
+        merged.push(...newRows.filter((r) => r.processStep.trim() === stepName));
+      } else {
+        merged.push(...(keptByStep.get(stepName) ?? []));
+      }
+    }
+
+    setRows(merged);
+    setNote(
+      `Đã import CP: cập nhật ${targetStepNames.size} công đoạn với tổng ${newRows.length} hạng mục. ` +
+      `Yêu cầu và câu Phát hiện FM đã được điền tự động — hoàn thiện Phát hiện NN và phân tích ở bước 2.`,
+    );
   };
 
   /** Lưu chức năng + yêu cầu hiện tại (bước 1) vào danh mục để dùng lại lâu dài. */
@@ -474,6 +555,21 @@ export default function App() {
                     {activeStep === 1 && (
                       <>
                         <button className="btn-secondary" type="button" onClick={addStep}>+ Thêm công đoạn</button>
+                        <button
+                          className="btn-secondary"
+                          type="button"
+                          onClick={() => cpInputRef.current?.click()}
+                          title="Upload file Control Plan (CP) hoặc Inspection Standard (IS) để tự động điền yêu cầu và phát hiện FM"
+                        >
+                          📋 Import CP/IS
+                        </button>
+                        <input
+                          ref={cpInputRef}
+                          type="file"
+                          accept=".xlsx"
+                          style={{ display: "none" }}
+                          onChange={handleCpFileChange}
+                        />
                         <button className="btn-secondary" type="button" onClick={saveStructureToCatalog} title="Lưu chức năng + yêu cầu vào danh mục để dùng lại lâu dài">💾 Lưu vào danh mục</button>
                       </>
                     )}
@@ -544,6 +640,15 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {cpImportData && (
+        <CpImportModal
+          cpData={cpImportData}
+          pfmeaStepNames={[...new Set(rows.map((r) => r.processStep.trim()).filter(Boolean))]}
+          onConfirm={handleCpImportConfirm}
+          onClose={() => setCpImportData(null)}
+        />
+      )}
     </div>
   );
 }

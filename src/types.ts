@@ -34,6 +34,8 @@ export interface PfmeaRow {
   failureMode: string;
   effect: string;
   cause: string;
+  /** Phát hiện nguyên nhân — nhập tay, per-cause (hiển thị dòng 1 trong ô Phát hiện). */
+  detectCause: string;
 
   // Step 3 — Risk Analysis
   severity: number; // 1-10

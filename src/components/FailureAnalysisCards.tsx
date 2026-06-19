@@ -112,6 +112,7 @@ export function FailureAnalysisCards({
                     <th className="fa-col-ef">Ảnh hưởng</th>
                     <th className="fa-col-sev">Điểm (S)</th>
                     <th className="fa-col-ca">Nguyên nhân</th>
+                    <th className="fa-col-det">Quản lý phát hiện</th>
                     <th className="fa-col-ai"></th>
                   </tr>
                 </thead>
@@ -255,6 +256,30 @@ export function FailureAnalysisCards({
                                 + Thêm nguyên nhân
                               </button>
                             )}
+                          </td>
+
+                          <td className="fa-col-det">
+                            <div className="fa-det-cell">
+                              <label className="fa-det-label">Phát hiện NN:</label>
+                              <textarea
+                                rows={2}
+                                value={row.detectCause ?? ""}
+                                placeholder="Phương pháp phát hiện nguyên nhân"
+                                onChange={(e) =>
+                                  onUpdateRow(row.id, { detectCause: e.target.value })
+                                }
+                              />
+                              <div className="fa-det-sep" />
+                              <label className="fa-det-label">Phát hiện FM:</label>
+                              <textarea
+                                rows={2}
+                                value={row.controlDetection ?? ""}
+                                placeholder="Phương pháp phát hiện dạng hỏng hóc (tự điền từ CP/IS)"
+                                onChange={(e) =>
+                                  onUpdateFmGroup(head.fmId, { controlDetection: e.target.value })
+                                }
+                              />
+                            </div>
                           </td>
 
                           {isHead && (

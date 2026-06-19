@@ -39,6 +39,7 @@ export function buildRowsFromSeed(seed: SeedModel): PfmeaRow[] {
           failureMode: fm.failureMode,
           effect: fm.effect,
           cause,
+          detectCause: "",
           severity: sev,
           classification: fm.classification,
           occurrence: 1,

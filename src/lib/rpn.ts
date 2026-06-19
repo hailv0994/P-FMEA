@@ -32,6 +32,7 @@ export function toPfmeaRow(g: GeneratedRow): PfmeaRow {
     failureMode: g.failureMode?.trim() || "",
     effect: g.effect?.trim() || "",
     cause: g.cause?.trim() || "",
+    detectCause: "",
     severity,
     classification: g.classification?.trim() || "",
     occurrence,
